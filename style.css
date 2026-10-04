@@ -18,3 +18,6 @@ canvas{display:block;width:100%;height:100%}
 #ov button{font:bold 16px sans-serif;padding:10px 20px;border:0;border-radius:10px;background:#facc15;color:#111}
 #ov button.no{background:#6b7280;color:#d1d5db}
 .row{display:flex;gap:12px;align-items:center;justify-content:space-between;text-align:left;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:10px;font-size:15px;width:min(88vw,400px)}
+.seg{display:flex;gap:6px}
+#ov button.on{background:#22c55e;color:#fff}
+#ov input{font:16px sans-serif;padding:10px;border-radius:8px;border:0;width:200px;text-align:center;user-select:text;-webkit-user-select:text}
