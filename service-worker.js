@@ -1,4 +1,4 @@
-const CACHE = 'obby3d-v5';
+const CACHE = 'obby3d-v6';
 const ARCHIVOS = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   self.skipWaiting();
