@@ -1,7 +1,7 @@
 {
-  "name": "Obby Scooter",
-  "short_name": "Obby",
-  "description": "Obby en scooter: 40 mundos cada vez más difíciles",
+  "name": "Obby Scooter 3D",
+  "short_name": "Obby 3D",
+  "description": "Obby 3D en scooter: 40 mundos cada vez más difíciles",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",

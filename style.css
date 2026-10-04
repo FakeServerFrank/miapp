@@ -1,5 +1,11 @@
-html,body{margin:0;height:100%;overflow:hidden;background:#000;touch-action:none;user-select:none;-webkit-user-select:none}
-canvas{display:block}
-.b{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.28);color:#fff;font:bold 28px sans-serif;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
-#bl{left:16px}#br{left:104px}
-#bj{right:16px;width:100px;height:100px;font-size:17px;background:rgba(250,204,21,.4)}
+html,body{margin:0;height:100%;overflow:hidden;background:#000;touch-action:none;user-select:none;-webkit-user-select:none;font-family:sans-serif}
+canvas{display:block;width:100%;height:100%}
+#hud{position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;color:#fff;font:bold 16px sans-serif;text-shadow:0 1px 3px #000}
+#bar{position:fixed;top:calc(38px + env(safe-area-inset-top));left:12px;width:120px;height:6px;background:rgba(0,0,0,.4);border-radius:3px}
+#fill{display:block;height:100%;width:0;background:#fff;border-radius:3px}
+#zl{position:fixed;left:0;bottom:0;width:55%;height:60%;touch-action:none}
+#base{position:fixed;display:none;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;background:rgba(255,255,255,.2);pointer-events:none}
+#knob{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.6)}
+#bj{position:fixed;right:18px;bottom:calc(24px + env(safe-area-inset-bottom));width:100px;height:100px;border-radius:50%;background:rgba(250,204,21,.45);color:#fff;font:bold 17px sans-serif;display:flex;align-items:center;justify-content:center;touch-action:none}
+#ov{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;font:bold 18px sans-serif;gap:10px}
+#ov b{font-size:30px}#ov small{font-weight:normal;font-size:14px;line-height:1.5}#ov span{color:#fcd34d}
