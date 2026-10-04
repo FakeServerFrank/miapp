@@ -1,2 +1,5 @@
 html,body{margin:0;height:100%;overflow:hidden;background:#000;touch-action:none;user-select:none;-webkit-user-select:none}
 canvas{display:block}
+.b{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.28);color:#fff;font:bold 28px sans-serif;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+#bl{left:16px}#br{left:104px}
+#bj{right:16px;width:100px;height:100px;font-size:17px;background:rgba(250,204,21,.4)}

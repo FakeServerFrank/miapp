@@ -1,7 +1,7 @@
 {
-  "name": "Patín Parkour",
-  "short_name": "Patín",
-  "description": "Parkour en monopatín: 40 mundos cada vez más difíciles",
+  "name": "Obby Scooter",
+  "short_name": "Obby",
+  "description": "Obby en scooter: 40 mundos cada vez más difíciles",
   "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "any",
