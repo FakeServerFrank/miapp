@@ -21,3 +21,9 @@ canvas{display:block;width:100%;height:100%}
 .seg{display:flex;gap:6px}
 #ov button.on{background:#22c55e;color:#fff}
 #ov input{font:16px sans-serif;padding:10px;border-radius:8px;border:0;width:200px;text-align:center;user-select:text;-webkit-user-select:text}
+.sb{position:fixed;left:8px;top:50%;transform:translateY(-50%);width:68px;padding:6px 0;border-radius:14px;background:rgba(0,0,0,.45);color:#fff;text-align:center;z-index:6;touch-action:none}
+.sb span{display:block;font-size:30px;line-height:34px}
+.sb small{display:block;font-size:10px;font-weight:bold}
+#bc{position:fixed;right:12px;top:calc(10px + env(safe-area-inset-top));width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;z-index:6;touch-action:none}
+#rot{display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:50;background:#111827;color:#fff;font:bold 22px sans-serif;text-align:center;align-items:center;justify-content:center;line-height:1.6}
+@media (orientation:portrait){#rot{display:flex}}

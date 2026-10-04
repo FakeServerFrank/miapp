@@ -4,7 +4,7 @@
   "description": "Obby 3D en scooter: 40 mundos cada vez más difíciles",
   "start_url": "./index.html",
   "display": "fullscreen",
-  "orientation": "any",
+  "orientation": "landscape",
   "background_color": "#111827",
   "theme_color": "#111827",
   "icons": [

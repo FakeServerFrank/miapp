@@ -42,27 +42,27 @@ let st = 'menu', tc = 0, W, P = [], p, cp, t = 0, endZ = 0, caidas = 0, jb = 0, 
 const keys = { l: 0, r: 0, u: 0, d: 0 };
 
 const TH = [
-  { sky: 0x8fd3ff, a: 0x4caf50, b: 0x66bb6a, fl: 0x1e6fd9, fr: 10, dc: 0x2e7d32, g: [0, 3, 6] },
-  { sky: 0xffd59a, a: 0xd9a05b, b: 0xe8b673, fl: 0xb7791f, fr: 10, dc: 0x3f8f3f, g: [1.2, 1.2, 8] },
-  { sky: 0xcfe9ff, a: 0x9fdcf5, b: 0xc4ecff, fl: 0x1d4ed8, fr: 3, dc: 0xe0f2fe, g: [0, 2.2, 5] },
-  { sky: 0x1b1040, a: 0x7c3aed, b: 0xdb2777, fl: 0x0f0f2e, fr: 9, dc: 0x22d3ee, g: [1, 1, 4] },
-  { sky: 0x5a1a12, a: 0x57534e, b: 0x78716c, fl: 0xdc2626, fr: 10, dc: 0x44403c, g: [2, 3.5, 5] }
+  { sky: 0x8fd3ff, a: 0x4caf50, b: 0x66bb6a, fl: 0x1e6fd9, fr: 10, dc: 0x2e7d32, g: [0, 3, 6], cap: 0x5fd35f, tf: 0x2fa84f },
+  { sky: 0xffd59a, a: 0xd9a05b, b: 0xe8b673, fl: 0xb7791f, fr: 10, dc: 0x3f8f3f, g: [1.2, 1.2, 8], cap: 0xf2d08a, tf: 0xb08d57 },
+  { sky: 0xcfe9ff, a: 0x9fdcf5, b: 0xc4ecff, fl: 0x1d4ed8, fr: 3, dc: 0xe0f2fe, g: [0, 2.2, 5], cap: 0xffffff, tf: 0xbfe9ff },
+  { sky: 0x1b1040, a: 0x7c3aed, b: 0xdb2777, fl: 0x0f0f2e, fr: 9, dc: 0x22d3ee, g: [1, 1, 4], cap: 0xf472b6, tf: 0x22d3ee },
+  { sky: 0x5a1a12, a: 0x57534e, b: 0x78716c, fl: 0xdc2626, fr: 10, dc: 0x44403c, g: [2, 3.5, 5], cap: 0x3f3a37, tf: 0xf97316 }
 ];
 const NOM = ['Pradera', 'Desierto', 'Hielo', 'Noche neón', 'Volcán'];
-let FR = 10, thN = '';
+let FR = 10, thN = '', AN = [], bst = 0, hcd = 0;
 let G = 1; try { const gs = localStorage.getItem('graficos'); if (gs !== null && +gs >= 0 && +gs <= 2) G = +gs; } catch (e) {}
 const DEC = [0, 40, 110];
 function build(w) {
   if (W) sc.remove(W);
-  W = new THREE.Group(); sc.add(W);
+  W = new THREE.Group(); sc.add(W); AN = [];
   const r = rnd(w * 977 + 13), ti = (w - 1) % 5, th = TH[ti], lay = (w * 3 + 1) % 4;
   FR = th.fr; thN = NOM[ti];
   const col = new THREE.Color(th.sky); sc.background = col; sc.fog = new THREE.Fog(col, 35, [80, 140, 220][G]);
   lava.material.color.setHex(th.fl);
-  const mN = [mat(th.a), mat(th.b)], mM = mat(0x3b82f6), mR = mat(0xef4444), mF = mat(0x22c55e), mG = mat(0xf59e0b), mW = mat(0xffffff);
+  const mN = [mat(th.a), mat(th.b)], mM = mat(0x3b82f6), mR = mat(0xef4444), mF = mat(0x22c55e), mG = mat(0xf59e0b), mW = mat(0xffffff), capM = mat(th.cap);
   const box = (x, y, z, w, h, d, m) => { const o = new THREE.Mesh(BX, m); o.scale.set(w, h, d); o.position.set(x, y, z); o.castShadow = o.receiveShadow = G === 2; W.add(o); return o; };
   const flag = (x, y, z, m, hgt) => { box(x, y + hgt / 2, z, .12, hgt, .12, mW); box(x + .5, y + hgt - .4, z, 1, .6, .08, m); };
-  const add = (o, m) => { o.mesh = box(o.x, o.y - .5, o.z, o.w, 1, o.d, o.k === 'd' ? m.clone() : m); o.bx = o.x; o.dx = 0; o.tm = 0; o.hide = 0; P.push(o); return o; };
+  const add = (o, m) => { o.mesh = box(o.x, o.y - .5, o.z, o.w, 1, o.d, o.k === 'd' ? m.clone() : m); if (o.k === 'n' && !o.end) { const c = new THREE.Mesh(BX, capM); c.scale.set(1.02, .17, 1.02); c.position.set(0, .43, 0); o.mesh.add(c); } o.bx = o.x; o.dx = 0; o.tm = 0; o.hide = 0; P.push(o); return o; };
   P = [];
   const sz = Math.max(8 - w * .11, 3.8), n = 12 + Math.floor(w * .7), gmax = Math.min(2.3 + w * .09, 5.8);
   add({ x: 0, y: 0, z: 0, w: 10, d: 10, k: 'n', cp: 1 }, mN[0]);
@@ -76,17 +76,35 @@ function build(w) {
     const dy = Math.max(-1.5, Math.min(1.3, (r() - .5 + (lay === 2 ? .25 : lay === 3 ? -.1 : 0)) * 2.4));
     const x = lay === 1 ? (i % 2 ? 1 : -1) * sz * .8 : Math.max(-6, Math.min(6, pz.bx + (r() - .5) * sz * 1.2));
     const o = add({ x, y: pz.y + dy, z: pz.z - pz.d / 2 - gap - d / 2, w: sz + r() * 1.5, d, k, a: 2, sp: .8 + r() * .5 + w * .01, cp: cpl ? 1 : 0 }, k === 'm' ? mM : k === 'd' ? mG : mN[i % 2]);
-    if (k === 'n' && !cpl && w >= 4 && r() < Math.min(.1 + w * .01, .4)) { o.lava = { w: o.w * .4 }; box(o.x, o.y + .35, o.z, o.lava.w, .7, 1.2, mR); }
+    if (k === 'n' && !cpl) {
+      const s = r(), pl = Math.min(.1 + w * .01, .4);
+      if (w >= 2 && s < .12) { o.tr = 1; const m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, .3, 16), mat(0xec4899)); m.position.set(o.x, o.y + .15, o.z); W.add(m); }
+      else if (w >= 3 && s < .22) { o.ramp = 1; const m = new THREE.Mesh(BX, mat(0xfb923c)); m.scale.set(2.4, .25, 2.4); m.position.set(o.x, o.y + .35, o.z - o.d * .25); m.rotation.x = .3; W.add(m); }
+      else if (w >= 4 && s < .22 + pl) { o.lava = { w: o.w * .4 }; box(o.x, o.y + .35, o.z, o.lava.w, .7, 1.2, mR); }
+      else if (w >= 5 && s < .22 + pl + Math.min(.06 + w * .006, .25)) {
+        const g = new THREE.Group(); g.position.set(o.x, o.y + 4, o.z);
+        const part = (x, y, z, a, c, d, m) => { const q = new THREE.Mesh(BX, m); q.scale.set(a, c, d); q.position.set(x, y, z); g.add(q); };
+        part(0, -1.5, 0, .15, 3, .15, mW); part(0, -3, 0, 1, .8, 1.2, mR); part(0, 0, 0, .5, .5, .5, mW);
+        W.add(g); o.ham = { g, sp: 1.2 + r() * .8 + w * .01, ph: r() * 6 };
+      }
+    }
     if (cpl) flag(o.x + o.w / 2 - .6, o.y, o.z, mF, 2.6);
     prev = k;
   }
   const l = P[P.length - 1];
   const e = add({ x: l.bx, y: l.y, z: l.z - l.d / 2 - gmax * .6 - 5, w: 12, d: 10, k: 'n', cp: 0, end: 1 }, mG);
   flag(e.x, e.y, e.z, mG, 5); endZ = e.z;
+  if (G > 0) {
+    const per = G === 2 ? 10 : 5, ok = o => o.k === 'n' && !o.lava && !o.tr && !o.ramp && !o.ham;
+    const im = new THREE.InstancedMesh(new THREE.ConeGeometry(.12, .55, 4), mat(th.tf), P.filter(ok).length * per);
+    im.frustumCulled = false; const dm = new THREE.Object3D(); let ix = 0;
+    P.forEach(o => { if (ok(o)) for (let j = 0; j < per; j++) { dm.position.set(o.x + (r() - .5) * o.w * .9, o.y + .27, o.z + (r() - .5) * o.d * .9); dm.rotation.set(0, r() * 3, 0); dm.scale.setScalar(.7 + r() * .8); dm.updateMatrix(); im.setMatrixAt(ix++, dm.matrix); } });
+    W.add(im);
+  }
   for (let i = 0; i < DEC[G]; i++) {
     const h = 8 + r() * 14, g = th.g;
     const m = new THREE.Mesh(new THREE.CylinderGeometry(g[0], g[1], h, g[2]), ti === 3 ? new THREE.MeshBasicMaterial({ color: th.dc }) : mat(th.dc));
-    m.position.set((r() < .5 ? -1 : 1) * (14 + r() * 20), -9 + h / 2, endZ * r()); W.add(m);
+    m.position.set((r() < .5 ? -1 : 1) * (14 + r() * 20), -9 + h / 2, endZ * r()); W.add(m); AN.push({ m, t: ['sway', 'sway', 'bob', 'spin', 'bob'][ti], ph: r() * 6, y0: m.position.y });
   }
 }
 
@@ -113,7 +131,13 @@ function tienda() {
 }
 function comprar(id) { const s = SC.find(x => x.id === id); if (!s || owned.includes(id) || coins < s.pr) return; coins -= s.pr; owned.push(id); eq = id; sv(); aplicar(); tienda(); }
 function equipar(id) { if (!owned.includes(id)) return; eq = id; sv(); aplicar(); tienda(); }
-const ADMIN = 'admin123'; // <-- CAMBIA ESTA CLAVE por la tuya
+const ADMIN = ['administracion', 'administrador', 'admin']; // claves válidas (sin tildes, da igual mayúsculas)
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+let pausa = false;
+const abrir = f => e => { e.preventDefault(); if (st === 'play') pausa = true; f(); };
+$('bs').addEventListener('pointerdown', abrir(tienda)); $('bc').addEventListener('pointerdown', abrir(config));
+let lk = 0;
+addEventListener('pointerdown', () => { if (lk) return; lk = 1; try { (document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : Promise.resolve()).then(() => screen.orientation && screen.orientation.lock('landscape')).catch(() => {}); } catch (e) {} });
 function gfx(n) {
   G = n; try { localStorage.setItem('graficos', n); } catch (e) {}
   const d = devicePixelRatio || 1;
@@ -125,9 +149,9 @@ function gfx(n) {
 function cambiarG(n) { gfx(n); build(world); p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0 }; cp = { x: 0, y: 0, z: 0 }; config(); }
 function config() {
   st = 'cfg';
-  ov('<b>CONFIGURACIÓN</b><small>Gráficos</small><div class="seg">' + ['Suave', 'Estándar', 'Ultra'].map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + ['Más fluido y rápido, con menos detalle', 'Equilibrado', 'Sombras reales, más detalle y más distancia (gasta más batería)'][G] + '</small><small>Código</small><input id="cod" type="password" placeholder="Código" autocomplete="off">' + bt('adm', 'Entrar') + bt('menu', 'Volver'));
+  ov('<b>CONFIGURACIÓN</b><small>Gráficos</small><div class="seg">' + ['Suave', 'Estándar', 'Ultra'].map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + ['Más fluido y rápido, con menos detalle', 'Equilibrado', 'Sombras reales, más detalle y más distancia (gasta más batería)'][G] + '</small><small>Código</small><input id="cod" type="password" placeholder="Código" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' + bt('adm', 'Entrar') + bt('menu', 'Volver'));
 }
-function entrar() { const i = $('cod'); if (i && i.value === ADMIN) admin(); else if (i) { i.value = ''; i.placeholder = 'Código incorrecto'; } }
+function entrar() { const i = $('cod'); if (i && ADMIN.includes(norm(i.value))) admin(); else if (i) { i.value = ''; i.placeholder = 'Código incorrecto'; } }
 function admin() {
   st = 'adm';
   ov('<b>ADMINISTRADOR</b><span>🪙 ' + coins + ' · Mundo ' + world + '</span>' + bt('a:coins', '+1000 monedas') + bt('a:all', 'Desbloquear todos los scooters') + '<input id="wn" type="number" min="1" max="40" placeholder="Mundo (1-40)">' + bt('a:go', 'Ir al mundo') + bt('a:reset', 'Borrar progreso') + bt('menu', 'Salir'));
@@ -140,7 +164,7 @@ function accion(x) {
   sv(); admin();
 }
 function start() {
-  build(world); aplicar(); t = 0; caidas = 0; cy = 0;
+  build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false;
   p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0 };
   cp = { x: 0, y: 0, z: 0 }; cam.position.set(0, 6, 10); st = 'play'; ov(null);
 }
@@ -157,7 +181,7 @@ $('ov').addEventListener('pointerdown', e => {
   const a = e.target.dataset && e.target.dataset.a;
   if (!a || performance.now() - tc < 300) return;
   if (a === 'play') { if (st === 'final') { world = 1; sv(); } start(); }
-  else if (a === 'shop') tienda(); else if (a === 'menu') menu(); else if (a === 'cfg') config(); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
+  else if (a === 'shop') tienda(); else if (a === 'menu') { if (pausa) { pausa = false; jx = jz = 0; st = 'play'; ov(null); } else menu(); } else if (a === 'cfg') config(); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
   else if (a[0] === 'b') comprar(a.slice(2)); else if (a[0] === 'e') equipar(a.slice(2));
 });
 
@@ -180,9 +204,10 @@ addEventListener('keydown', e => { if (K[e.code]) keys[K[e.code]] = 1; if (e.cod
 addEventListener('keyup', e => { if (K[e.code]) keys[K[e.code]] = 0; });
 
 function update(dt) {
-  if (st !== 'play') return;
-  t += dt;
+  if (st !== 'play' || innerHeight > innerWidth) return;
+  t += dt; bst -= dt; hcd -= dt;
   P.forEach(o => {
+    if (o.ham) { const a = Math.sin(t * o.ham.sp + o.ham.ph) * 1.2; o.ham.g.rotation.z = a; o.ham.hx = o.x + 3 * Math.sin(a); o.ham.hy = o.y + 4 - 3 * Math.cos(a); }
     if (o.k === 'm') { const a = o.x; o.x = o.bx + Math.sin(t * o.sp) * o.a; o.dx = o.x - a; o.mesh.position.x = o.x; }
     if (o.k === 'd') {
       if (o.tm > 0) { o.tm += dt; o.mesh.material.emissive.setHex(Math.floor(o.tm * 15) % 2 ? 0x884400 : 0); if (o.tm > .7) { o.hide = 1.8; o.tm = 0; } }
@@ -193,7 +218,7 @@ function update(dt) {
   if (p.on && !p.on.hidden) p.x += p.on.dx;
   let ix = jx + keys.r - keys.l, iz = jz + keys.d - keys.u; const m = Math.hypot(ix, iz);
   if (m > 1) { ix /= m; iz /= m; }
-  const max = (8 + world * .08) * ST.s, cs = Math.cos(cy), sn = Math.sin(cy);
+  const max = (8 + world * .08) * ST.s * (bst > 0 ? 1.35 : 1), cs = Math.cos(cy), sn = Math.sin(cy);
   const wx = ix * cs + iz * sn, wz = -ix * sn + iz * cs;
   if (m > .05) {
     const c = p.on ? 1 : .7, sp0 = Math.hypot(p.vx, p.vz);
@@ -215,14 +240,18 @@ function update(dt) {
     p.vy = 0; p.on = land; p.coy = .12;
     if (land.cp) cp = { x: land.x, y: land.y, z: land.z };
     if (land.k === 'd' && land.tm === 0) land.tm = .001;
+    if (land.tr && Math.hypot(p.x - land.x, p.z - land.z) < 1.3) { p.vy = 15; p.on = null; p.coy = 0; }
     if (land.end) return terminar();
   } else p.on = null;
+  if (p.on && p.on.ramp) { const rz = p.on.z - p.on.d * .25; if (p.vz < -2 && Math.abs(p.x - p.on.x) < 1.3 && p.z < rz - .5 && p.z > rz - 1.4) { p.vy = 8 + Math.hypot(p.vx, p.vz) * .35; p.on = null; p.coy = 0; bst = .9; } }
+  for (const o of P) { const h = o.ham; if (h && hcd <= 0 && Math.abs(p.x - h.hx) < 1 && Math.abs(p.z - o.z) < 1.2 && p.y < h.hy + .5 && p.y + 1.6 > h.hy - .5) { p.vx = Math.cos(t * h.sp + h.ph) >= 0 ? 13 : -13; p.vy = 6; p.on = null; hcd = .7; } }
   for (const o of P) if (o.lava && Math.abs(p.x - o.x) < o.lava.w / 2 + .2 && Math.abs(p.z - o.z) < .8 && p.y < o.y + .7) { morir(); break; }
   if (p.y < -10) morir();
 }
 
 let yaw = 0, hudT = '';
 function render(dt) {
+  const tm = performance.now() / 1000;
   H.position.set(p.x, p.y, p.z);
   if (Math.hypot(p.vx, p.vz) > 1) { const tg = Math.atan2(-p.vx, -p.vz); let d = tg - yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); yaw += d * Math.min(1, dt * 10); }
   H.rotation.y = yaw;
@@ -230,7 +259,9 @@ function render(dt) {
   for (const o of P) if (!o.hidden && o.y <= p.y + .3 && Math.abs(p.x - o.x) < o.w / 2 && Math.abs(p.z - o.z) < o.d / 2 && (top === null || o.y > top)) top = o.y;
   disc.visible = top !== null && G < 2;
   if (top !== null) { disc.position.set(p.x, top + .03, p.z); disc.scale.setScalar(Math.max(.4, 1.5 - (p.y - top) * .2)); }
-  lava.position.set(p.x, -9, p.z);
+  lava.position.set(p.x, -9 + Math.sin(tm * 1.5) * .25, p.z);
+  AN.forEach(a => { if (a.t === 'sway') a.m.rotation.z = Math.sin(tm * 1.4 + a.ph) * .06; else if (a.t === 'spin') a.m.rotation.y += dt * .8; else a.m.position.y = a.y0 + Math.sin(tm * 1.2 + a.ph) * 1.2; });
+  clouds.forEach(c => { c.position.x += dt * 1.5; if (c.position.x > 120) c.position.x = -120; });
   if (G === 2) { sun.position.set(p.x + 8, p.y + 22, p.z + 10); sun.target.position.set(p.x, p.y, p.z); sun.target.updateMatrixWorld(); }
   const por = cam.aspect < 1, bk = por ? 12 : 8.5, hh = por ? 7 : 5.2, sn = Math.sin(cy), cs = Math.cos(cy);
   cam.position.lerp(new THREE.Vector3(p.x + sn * bk, p.y + hh, p.z + cs * bk), Math.min(1, dt * 5));
