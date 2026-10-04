@@ -1,4 +1,4 @@
-const CACHE = 'patin-v2';
+const CACHE = 'patin-v3';
 const ARCHIVOS = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   self.skipWaiting();

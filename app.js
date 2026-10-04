@@ -4,6 +4,7 @@ let S, LW, LH, GY;
 function fit() {
   const d = devicePixelRatio || 1;
   cv.width = innerWidth * d; cv.height = innerHeight * d;
+  cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
   S = Math.min(innerWidth / 480, innerHeight / 320) * d;
   LW = cv.width / S; LH = cv.height / S; GY = LH * 0.72;
 }
