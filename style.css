@@ -62,3 +62,15 @@ canvas{display:block;width:100%;height:100%}
 .it i{width:34px;height:34px;border-radius:50%;display:block;border:2px solid rgba(255,255,255,.5)}
 .it em{font-style:normal;color:#4ade80;font-weight:bold}
 #ov .it button{padding:5px 8px;font-size:12px}
+#base{width:var(--js,110px);height:var(--js,110px)}
+#knob{width:36%;height:36%;left:32%;top:32%}
+#bj{width:var(--bj,100px);height:var(--bj,100px)}
+#base,#bj{opacity:var(--op,1)}
+body.sw #base{left:auto;right:20px}
+body.sw #bj{right:auto;left:18px}
+body.sw #zl{left:auto;right:0}
+body.sw #zr{left:0;right:50%}
+body.ctl #ov{background:rgba(0,0,0,.25)}
+body.ctl #base,body.ctl #bj{z-index:7}
+.stp{display:flex;align-items:center;gap:8px}
+.stp b{min-width:34px;text-align:center}
