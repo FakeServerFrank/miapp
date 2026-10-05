@@ -74,3 +74,10 @@ body.ctl #ov{background:rgba(0,0,0,.25)}
 body.ctl #base,body.ctl #bj{z-index:7}
 .stp{display:flex;align-items:center;gap:8px}
 .stp b{min-width:34px;text-align:center}
+#base{left:var(--jx,20px);bottom:var(--jy,24px)}
+#bj{right:auto;left:var(--bx,auto);bottom:var(--by,24px)}
+#zl{z-index:1}
+#zr{left:0;right:0;top:0;bottom:0;z-index:0}
+body.ctl #base{pointer-events:auto}
+body.ctl #base{pointer-events:auto;touch-action:none}
+body.ctl #base,body.ctl #bj{outline:2px dashed #fde047;outline-offset:4px}
