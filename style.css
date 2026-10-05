@@ -81,3 +81,17 @@ body.ctl #base,body.ctl #bj{z-index:7}
 body.ctl #base{pointer-events:auto}
 body.ctl #base{pointer-events:auto;touch-action:none}
 body.ctl #base,body.ctl #bj{outline:2px dashed #fde047;outline-offset:4px}
+#ov{background:linear-gradient(160deg,rgba(6,10,28,.92),rgba(28,14,56,.94))}
+#ov b{color:var(--ac,#facc15)}
+#ov button{background:var(--ac,#facc15);color:#111;border-radius:12px;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.card{border:2px solid var(--ac,#facc15);box-shadow:0 0 22px rgba(0,0,0,.5),0 0 16px var(--ac,#facc15)}
+.row{border-left:4px solid var(--ac,#facc15)}
+.it.puesto{outline-color:var(--ac,#22c55e)}
+.chips i{border:1px solid var(--ac,#facc15)}
+.pb i{background:linear-gradient(90deg,var(--ac,#22c55e),#fff)}
+.big{font-size:56px;line-height:1.1;filter:drop-shadow(0 0 12px var(--ac,#facc15))}
+.rn{font-size:26px;font-weight:bold;letter-spacing:2px;color:var(--ac,#facc15)}
+.pb.big{height:16px;border-radius:8px}
+.pct{font-size:22px;font-weight:bold;color:var(--ac,#facc15)}
+#hud{background:linear-gradient(90deg,rgba(124,58,237,.75),rgba(236,72,153,.65))}
+.sb,#bc{background:linear-gradient(160deg,rgba(124,58,237,.7),rgba(15,23,42,.75));border:1px solid rgba(255,255,255,.28)}

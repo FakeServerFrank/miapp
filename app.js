@@ -127,18 +127,18 @@ function build(w) {
   const add = (o, m) => { const pr = Math.min(P.length / (n + 2), 1), col = o.k === 'm' ? 0x3b82f6 : o.k === 'd' ? 0xf59e0b : new THREE.Color().setHSL(((220 + pr * 140 + HO) % 360) / 360, .72, .55);
     o.mesh = box(o.x, o.y - .5, o.z, o.w, 1, o.d, mt(col, CHK, o.w / 1.4, o.d / 1.4)); if (false) { const c = new THREE.Mesh(BX, capM); c.scale.set(1.02, .17, 1.02); c.position.set(0, .43, 0); o.mesh.add(c); } o.bx = o.x; o.dx = 0; o.tm = 0; o.hide = 0; P.push(o); return o; };
   P = [];
-  const sz = Math.max(8 - w * .12, 3.5), n = 12 + Math.floor(w * .7), gmax = Math.min((2.4 + w * .1) * (1 + Math.floor((w - 1) / 6) * .02), 6.9);
+  const sz = Math.max(8 - w * .12, 3.5), n = Math.min(12 + Math.floor(w * .7), 60), gmax = Math.min((2.4 + w * .1) * (1 + Math.floor((w - 1) / 6) * .02), 6.9);
   add({ x: 0, y: 0, z: 0, w: 10, d: 10, k: 'n', cp: 1 }, mN[0]);
   let prev = 'n';
   for (let i = 1; i <= n; i++) {
-    const cpl = i % (w < 30 ? 6 : 7) === 0, q = r(); let k = 'n';
+    const cpl = i % (w < 30 ? 6 : w < 60 ? 7 : 9) === 0, q = r(); let k = 'n';
     if (!cpl && w >= 3 && q < Math.min(.12 + w * .01, .38)) k = 'm';
     else if (!cpl && w >= 7 && q < Math.min(.32 + w * .01, .58)) k = 'd';
     const d = sz + r() * 1.5, pz = P[P.length - 1];
     let gap = gmax * (.6 + .4 * r()); if (k === 'm') gap *= .6; if (prev === 'm') gap *= .75;
     const dy = Math.max(-1.5, Math.min(1.3, (r() - .5 + (lay === 2 ? .25 : lay === 3 ? -.1 : 0)) * 2.4));
     const x = lay === 1 ? (i % 2 ? 1 : -1) * sz * .8 : Math.max(-6, Math.min(6, pz.bx + (r() - .5) * sz * 1.2));
-    const o = add({ x, y: pz.y + dy, z: pz.z - pz.d / 2 - gap - d / 2, w: sz + r() * 1.5, d, k, a: 2 + Math.min(w * .03, 1.5), sp: (.8 + r() * .5 + w * .015) * (1 + Math.floor((w - 1) / 6) * .04), cp: cpl ? 1 : 0 }, k === 'm' ? mM : k === 'd' ? mG : mN[i % 2]);
+    const o = add({ x, y: pz.y + dy, z: pz.z - pz.d / 2 - gap - d / 2, w: sz + r() * 1.5, d, k, a: 2 + Math.min(w * .03, 1.5), sp: (.8 + r() * .5 + w * .015) * (1 + Math.min(Math.floor((w - 1) / 6), 14) * .04), cp: cpl ? 1 : 0 }, k === 'm' ? mM : k === 'd' ? mG : mN[i % 2]);
     if (k === 'n' && !cpl) {
       const s = r(), pl = Math.min(.12 + w * .01, .3);
       if (w >= 2 && s < .12) { o.tr = 1; const m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, .3, 16), mat(0xec4899)); m.position.set(o.x, o.y + .15, o.z); W.add(m); }
@@ -153,7 +153,7 @@ function build(w) {
     }
     if (k === 'n' && !cpl && !o.tr && !o.ramp && !o.lava && !o.ham) {
       const s2 = r(), kk = r();
-      if (w >= 3 && s2 < Math.min(.35 + w * .01, .7)) {
+      if (w >= 3 && s2 < Math.min(.35 + w * .01, .85)) {
         if (kk < .2) {
           o.tun = 1; const fm = new THREE.MeshBasicMaterial({ color: 0x22d3ee });
           for (let q = -1; q <= 1; q++) { const zz = o.z + q * 1.8; box(o.x - 1.9, o.y + 1.4, zz, .25, 2.8, .25, fm); box(o.x + 1.9, o.y + 1.4, zz, .25, 2.8, .25, fm); box(o.x, o.y + 2.8, zz, 4.05, .25, .25, fm); }
@@ -225,9 +225,9 @@ function build(w) {
   }
 }
 
-let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
-try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; rkc = +localStorage.getItem('rkc') || 0; tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
-const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
+let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, rp = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
+try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; rkc = +localStorage.getItem('rkc') || 0; { const q = localStorage.getItem('rp'); rp = q === null ? done * 6 : +q; } tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
+const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('rp', rp); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
 const SC = [
   { id: '0', n: 'Clásico', pr: 0, s: 0, a: 0, j: 0, c: 0x222222, dk: [1, 1], wr: 1, tr: { c: 0xbbbbbb, rise: .3, spr: .3, rate: 6 } },
   { id: '1', n: 'Turbo Rojo', pr: 150, s: .08, a: .1, j: 0, c: 0xdc2626, dk: [1, 1.05], wr: 1.1, bar: 0xdc2626, tr: { c: 0xff3b1f, rise: 1.5, spr: .15, rate: 40 } },
@@ -243,7 +243,7 @@ function aplicar() { const s = SC.find(x => x.id === eq) || SC[0]; ST = { s: 1 +
   barM.material.color.setHex(s.bar || 0xcccccc); stemM.material.color.setHex(s.bar || 0xcccccc);
   fin.visible = !!s.fin; if (s.fin) fin.material.color.setHex(s.fin);
   trail.material.color.setHex(s.tr.c); TS = Object.assign({ acc: 0 }, s.tr); vestir(); deckM.material.color.setHex(s.c); }
-function ov(h) { document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
+function ov(h) { document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); o.style.setProperty('--ac', ACC[st] || '#facc15'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
 const bt = (a, t, c) => '<button class="' + (c || '') + '" data-a="' + a + '">' + t + '</button>';
 function menu() { st = 'menu'; ov('<b>OBBY SCOOTER 3D</b><small>Joystick: moverte · Arrastra a la derecha: girar la cámara<br>SALTAR: saltar · Banderas verdes: checkpoint</small><span>🪙 ' + coins + '</span>' + bt('play', world > 1 ? 'Continuar: Mundo ' + world : 'Jugar') + bt('shop', 'Tienda') + bt('cfg', 'Configuración') + bt('on', '🌐 Online') + bt('rk', '🏆 Rango')); }
 function tienda() {
@@ -288,7 +288,7 @@ function admPanel() {
   const tgl = (k, t) => '<button data-d="' + k + '" class="' + (adm[k] ? 'on' : '') + '">' + t + (adm[k] ? ' ✔' : '') + '</button>', bn = (k, t) => '<button data-d="' + k + '">' + t + '</button>';
   const body = {
     j: tgl('god', '🛡 Invencible') + tgl('spd', '⚡ Velocidad x2') + tgl('inf', '⇈ Saltos infinitos') + tgl('fly', '🕊 Volar') + bn('cp', '📍 Al checkpoint'),
-    m: bn('ant10', '◀◀ Mundo −10') + bn('sig10', 'Mundo +10 ▶▶') + bn('ant', '◀ Mundo −1') + bn('sig', 'Mundo +1 ▶') + bn('skip', '🏁 Completar') + bn('meta', '🚩 Ir a la meta') + bn('rein', '↻ Reiniciar'),
+    m: bn('rp', '🏆 +50 puntos') + bn('ant10', '◀◀ Mundo −10') + bn('sig10', 'Mundo +10 ▶▶') + bn('ant', '◀ Mundo −1') + bn('sig', 'Mundo +1 ▶') + bn('skip', '🏁 Completar') + bn('meta', '🚩 Ir a la meta') + bn('rein', '↻ Reiniciar'),
     t: bn('mon', '🪙 +1000') + bn('mon10', '🪙 +10000') + bn('monopatines', '🛴 Todos los monopatines') + bn('ropas', '👕 Toda la ropa') + bn('cero', '🪙 Poner en 0'),
     s: bn('off', '⏻ Desactivar admin') + bn('reset', adm.cf ? '⚠ ¿Seguro? Toca otra vez' : '⚠ Borrar progreso')
   }[adm.tab];
@@ -298,16 +298,16 @@ function admAct(k) {
   const cf = adm.cf; adm.cf = false;
   if (k === 'abrir') adm.open = !adm.open;
   else if (k.startsWith('tab:')) adm.tab = k.slice(4);
-  else if (k === 'mon') { coins += 1000; sv(); } else if (k === 'mon10') { coins += 10000; sv(); } else if (k === 'cero') { coins = 0; sv(); }
+  else if (k === 'rp') { rp += 50; cobrarRango(); sv(); } else if (k === 'mon') { coins += 1000; sv(); } else if (k === 'mon10') { coins += 10000; sv(); } else if (k === 'cero') { coins = 0; sv(); }
   else if (k === 'monopatines') { owned = SC.map(s => s.id); sv(); }
   else if (k === 'ropas') { ropa = Object.values(CLO).flat().map(x => x.id); sv(); }
   else if (k === 'skip') { if (st === 'play') terminar(); }
-  else if (k === 'sig' || k === 'ant' || k === 'sig10' || k === 'ant10') { world = Math.max(1, Math.min(MAX, world + ({ sig: 1, ant: -1, sig10: 10, ant10: -10 })[k])); sv(); if (st === 'play') start(); }
+  else if (k === 'sig' || k === 'ant' || k === 'sig10' || k === 'ant10') { world = Math.max(1, world + ({ sig: 1, ant: -1, sig10: 10, ant10: -10 })[k]); sv(); if (st === 'play') start(); }
   else if (k === 'rein') { if (st === 'play') start(); }
   else if (k === 'cp') { if (st === 'play') { p.x = cp.x; p.y = cp.y + .05; p.z = cp.z; p.vx = p.vy = p.vz = 0; } }
   else if (k === 'meta') { if (st === 'play') { const e = P[P.length - 1]; p.x = e.x; p.y = e.y + .05; p.z = e.z + 2; p.vx = p.vy = p.vz = 0; } }
   else if (k === 'off') adm = { on: false, open: true, tab: 'j', cf: false, god: false, spd: false, inf: false, fly: false };
-  else if (k === 'reset') { if (!cf) adm.cf = true; else { coins = 0; owned = ['0']; eq = '0'; done = 0; rkc = 0; world = 1; rec = []; tj = 0; racha = 0; dia = ''; ropa = migra([]); viste = migraV({}); aplicar(); sv(); } }
+  else if (k === 'reset') { if (!cf) adm.cf = true; else { coins = 0; owned = ['0']; eq = '0'; done = 0; rkc = 0; rp = 0; world = 1; rec = []; tj = 0; racha = 0; dia = ''; ropa = migra([]); viste = migraV({}); aplicar(); sv(); } }
   else adm[k] = !adm[k];
   admPanel();
 }
@@ -491,14 +491,16 @@ function netStep(dt) {
   else if (net.conn && net.conn.open) net.conn.send(s);
 }
 const RK = [['Bronce', '🥉', 0, 0], ['Plata', '🥈', 80, .06], ['Oro', '🥇', 150, .12], ['Platino', '💠', 250, .18], ['Esmeralda', '💚', 350, .24], ['Diamante', '💎', 500, .3], ['Maestro', '🔮', 700, .36], ['Gran Maestro', '👑', 900, .42], ['Élite', '🔥', 1200, .48], ['Leyenda', '🏆', 1600, .55]];
-const rangoDe = d => Math.min(RK.length - 1, Math.floor(d / 6));
-function cobrarRango() { const r = rangoDe(done); let g = 0; while (rkc < r) { rkc++; g += RK[rkc][2]; } if (g) { coins += g; sv(); } return g; }
+const CUM = [0]; for (let i = 0; i < 9; i++) CUM.push(CUM[i] + 40 + i * 10);
+const RKC = ['#cd7f32', '#cbd5e1', '#facc15', '#67e8f9', '#34d399', '#60a5fa', '#c084fc', '#f472b6', '#fb923c', '#f43f5e'];
+const ACC = { menu: '#facc15', shop: '#60a5fa', rew: '#fb923c', clo: '#c084fc', cfg: '#94a3b8', ctl: '#2dd4bf', onl: '#4ade80', rk: '#fbbf24', win: '#4ade80', adm: '#a78bfa' };
+const rangoDe = p2 => { let r = 0; while (r < 9 && p2 >= CUM[r + 1]) r++; return r; };
+function cobrarRango() { const r = rangoDe(rp); let g = 0; while (rkc < r) { rkc++; g += RK[rkc][2]; } if (g) { coins += g; sv(); } return g; }
 function rangoUI() {
   st = 'rk';
-  const r = rangoDe(done), top = r >= RK.length - 1;
-  ov('<b>🏆 RANGO</b><div class="card"><div class="stars">' + RK[r][1] + '</div><b>' + RK[r][0] + '</b><small>Bonus de monedas: +' + Math.round(RK[r][3] * 100) + '%</small>' +
-    (top ? '<small>¡Rango máximo alcanzado!</small>' : '<div class="pb"><i style="width:' + ((done - r * 6) / 6 * 100) + '%"></i></div><small>' + done + ' / ' + (r + 1) * 6 + ' mundos para ' + RK[r + 1][1] + ' ' + RK[r + 1][0] + ' (+' + RK[r + 1][2] + ' 🪙)</small>') + '</div>' +
-    '<div class="gr">' + RK.map((x, i) => '<div class="it ' + (i === r ? 'puesto' : '') + '"><span>' + x[1] + ' ' + x[0] + '</span><small>' + (i <= r ? '✔ ' : '🔒 ') + 'mundos ' + (i * 6 + 1) + '–' + (i * 6 + 6) + '</small><small>+' + x[2] + ' 🪙 · +' + Math.round(x[3] * 100) + '%</small></div>').join('') + '</div>' + bt('menu', 'Volver'));
+  const r = rangoDe(rp), top = r >= 9, nd = top ? 1 : CUM[r + 1] - CUM[r], pc = top ? 100 : Math.floor((rp - CUM[r]) / nd * 100);
+  ov('<div class="card"><div class="big">' + RK[r][1] + '</div><b class="rn">' + RK[r][0] + '</b><div class="pb big"><i style="width:' + pc + '%"></i></div><div class="pct">' + (top ? '¡Rango máximo!' : pc + '%') + '</div><small>' + (top ? rp + ' puntos acumulados' : (rp - CUM[r]) + ' / ' + nd + ' puntos · siguiente: ' + RK[r + 1][1] + ' ' + RK[r + 1][0]) + '</small><small>Cada mundo pasado da <b>10</b> puntos si te caes 2 veces o menos, y <b>3</b> si te caes más.</small></div>' + bt('menu', 'Volver'));
+  $('ov').style.setProperty('--ac', RKC[r]);
 }
 function start() {
   build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false;
@@ -508,18 +510,17 @@ function start() {
 function morir() { caidas++; p.x = cp.x; p.y = cp.y + .05; p.z = cp.z; p.vx = p.vy = p.vz = 0; p.on = null; p.coy = .1; }
 function terminar() {
   if (net.on) { netFin(); toast('🏁 ¡Llegaste en ' + t.toFixed(1) + ' s!'); coins += 10; sv(); st = 'win'; return ov('<div class="card"><div class="stars">🏁</div><b>¡Llegaste a la meta!</b><div class="chips"><i>🪙 +10</i><i>⏱ ' + t.toFixed(1) + ' s</i></div><div class="bts">' + bt('on', 'Sala online') + bt('menu', 'Menú') + '</div></div>'); }
-  const gan = Math.round((world > done ? 20 + world * 3 + (caidas === 0 ? 5 : 0) : 5) * (1 + RK[rangoDe(done)][3])), est = caidas === 0 ? 3 : caidas <= 3 ? 2 : 1;
-  if (world > done) done = world;
-  coins += gan; const gr = cobrarRango();
-  const hd = '<div class="card"><div class="stars">' + '⭐'.repeat(est) + '☆'.repeat(3 - est) + '</div>';
-  const ch = '<div class="chips"><i>🪙 +' + gan + '</i><i>💥 ' + caidas + ' caídas</i></div><small>Total 🪙 ' + coins + '</small>' + (gr ? '<small>🏆 ¡Subiste a ' + RK[rkc][1] + ' ' + RK[rkc][0] + '! +' + gr + ' 🪙</small>' : '');
-  if (world >= MAX) {
-    const nuevo = !owned.includes('7'); if (nuevo) owned.push('7');
-    sv(); st = 'final';
-    return ov(hd + '<b>¡Completaste los ' + MAX + ' mundos!</b>' + ch + (nuevo ? '<small>🛴 Desbloqueaste el Fénix Legendario</small>' : '') + '<div class="bts">' + bt('play', 'Jugar de nuevo') + bt('menu', 'Menú') + '</div></div>');
-  }
+  const nuevo = world > done, pts = nuevo ? (caidas <= 2 ? 10 : 3) : 0, est = caidas === 0 ? 3 : caidas <= 3 ? 2 : 1;
+  const gan = Math.round((nuevo ? 20 + world * 3 + (caidas === 0 ? 5 : 0) : 5) * (1 + RK[rangoDe(rp)][3]));
+  if (nuevo) done = world;
+  rp += pts; coins += gan; const gr = cobrarRango();
+  let fx = false; if (world === MAX && !owned.includes('7')) { owned.push('7'); fx = true; }
+  const r = rangoDe(rp), top = r >= 9, pc = top ? 100 : Math.floor((rp - CUM[r]) / (CUM[r + 1] - CUM[r]) * 100);
   world++; sv(); st = 'win';
-  ov(hd + '<b>Mundo ' + (world - 1) + ' completado</b>' + ch + '<div class="pb"><i style="width:' + ((world - 1) / MAX * 100) + '%"></i></div><small>' + (world - 1) + ' / ' + MAX + ' mundos · Siguiente: ' + NOM[(world - 1) % NOM.length] + '</small><div class="bts">' + bt('play', 'Siguiente mundo ▶') + bt('menu', 'Menú') + '</div></div>');
+  ov('<div class="card"><div class="stars">' + '⭐'.repeat(est) + '☆'.repeat(3 - est) + '</div><b>Mundo ' + (world - 1) + ' completado</b><div class="chips"><i>🪙 +' + gan + '</i><i>🏆 +' + pts + ' pts</i><i>💥 ' + caidas + '</i></div>' +
+    (gr ? '<small>🎉 ¡Subiste a ' + RK[rkc][1] + ' ' + RK[rkc][0] + '! +' + gr + ' 🪙</small>' : '') + (fx ? '<small>🛴 ¡Desbloqueaste el Fénix Legendario!</small>' : '') +
+    '<div class="rn">' + RK[r][1] + ' ' + RK[r][0] + '</div><div class="pb"><i style="width:' + pc + '%"></i></div><small>' + (top ? rp + ' puntos' : pc + '% para ' + RK[r + 1][1] + ' ' + RK[r + 1][0]) + ' · Siguiente: ' + NOM[(world - 1) % NOM.length] + '</small><div class="bts">' + bt('play', 'Siguiente mundo ▶') + bt('menu', 'Menú') + '</div></div>');
+  $('ov').style.setProperty('--ac', RKC[r]);
 }
 $('ov').addEventListener('pointerdown', e => {
   const a = e.target.dataset && e.target.dataset.a;
@@ -573,7 +574,7 @@ function update(dt) {
   if (p.on && p.on.conv) p.x += p.on.conv.vx * dt;
   let ix = jx + keys.r - keys.l, iz = jz + keys.d - keys.u; const m = Math.hypot(ix, iz);
   if (m > 1) { ix /= m; iz /= m; }
-  const max = (8 + world * .08) * ST.s * (bst > 0 ? 1.35 : 1) * (adm.spd ? 1.8 : 1), cs = Math.cos(cy), sn = Math.sin(cy);
+  const max = Math.min(8 + world * .08, 13.2) * ST.s * (bst > 0 ? 1.35 : 1) * (adm.spd ? 1.8 : 1), cs = Math.cos(cy), sn = Math.sin(cy);
   const wx = ix * cs + iz * sn, wz = -ix * sn + iz * cs;
   if (m > .05) {
     const c = p.on ? 1 : .7, sp0 = Math.hypot(p.vx, p.vz);
@@ -596,7 +597,7 @@ function update(dt) {
     p.vy = 0; p.on = land; p.coy = .12; p.dj = true;
     if (land.cp) {
       cp = { x: land.x, y: land.y, z: land.z };
-      if (land !== P[0] && !land.got && !net.on) { land.got = 1; const g = Math.round((world > done ? 5 + Math.floor(world / 6) : 1) * (1 + RK[rangoDe(done)][3])); coins += g; toast('📍 Checkpoint · +' + g + ' 🪙'); }
+      if (land !== P[0] && !land.got && !net.on) { land.got = 1; const g = Math.round((world > done ? 5 + Math.floor(world / 6) : 1) * (1 + RK[rangoDe(rp)][3])); coins += g; toast('📍 Checkpoint · +' + g + ' 🪙'); }
     }
     if (land.k === 'd' && land.tm === 0) land.tm = .001;
     if (land.tr && Math.hypot(p.x - land.x, p.z - land.z) < 1.3) { p.vy = 15; p.on = null; p.coy = 0; }
@@ -667,7 +668,7 @@ function render(dt) {
   const por = cam.aspect < 1, bk = por ? 12 : 8.5, hh = por ? 7 : 5.2, sn = Math.sin(cy), cs = Math.cos(cy);
   cam.position.lerp(new THREE.Vector3(p.x + sn * bk, p.y + hh, p.z + cs * bk), Math.min(1, dt * 5));
   cam.lookAt(p.x - sn * 5, p.y + 1.2, p.z - cs * 5);
-  const h = RK[rangoDe(done)][1] + ' ' + RK[rangoDe(done)][0] + ' · Mundo ' + world + '/' + MAX + ' · ' + thN + '   🪙 ' + coins + '   Caídas: ' + caidas + (net.on ? '   🌐 ' + (Object.keys(AV).length + 1) : '');
+  const h = RK[rangoDe(rp)][1] + ' ' + RK[rangoDe(rp)][0] + ' · Mundo ' + world + ' · ' + thN + '   🪙 ' + coins + '   Caídas: ' + caidas + (net.on ? '   🌐 ' + (Object.keys(AV).length + 1) : '');
   if (h !== hudT) { $('hud').textContent = h; hudT = h; }
   $('fill').style.width = Math.max(0, Math.min(p.z / endZ, 1)) * 100 + '%';
   sky.position.copy(cam.position); trailStep(dt, tm); animar(dt, tm); netStep(dt);
