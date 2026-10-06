@@ -111,3 +111,19 @@ body.ctl #base,body.ctl #bj{outline:2px dashed #fde047;outline-offset:4px}
 #bw.dot::after{content:'';position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#ef4444;border:2px solid #fff}
 body.lobby #hud,body.lobby #bar,body.lobby #base,body.lobby #bj,body.lobby #zl,body.lobby #zr{display:none}
 #toast{white-space:pre-line;text-align:center;border-radius:16px;line-height:1.5;border:2px solid #facc15}
+.pn{width:min(94vw,640px);background:linear-gradient(160deg,rgba(34,20,78,.97),rgba(14,11,40,.98));border:2px solid var(--ac,#a78bfa);border-radius:18px;box-shadow:0 0 26px rgba(124,58,237,.5);overflow:hidden;text-align:left}
+.pn-h{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:linear-gradient(90deg,#7c3aed,#ec4899)}
+#ov .pn-h b{color:#fff;font-size:18px;letter-spacing:2px;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+#ov .pn-h .x{background:rgba(0,0,0,.35);color:#fff;box-shadow:none;padding:4px 12px;border-radius:10px;font-size:18px}
+.pn-b{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.sec{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.sec h4{margin:0;font-size:13px;color:#fde047;letter-spacing:1.5px}
+.sec small{font-size:12px;opacity:.85;font-weight:normal;line-height:1.35}
+.sec .seg{display:flex;gap:6px}
+#ov .sec .seg button{flex:1;padding:8px 2px;font-size:13px;background:rgba(255,255,255,.12);color:#fff;box-shadow:none}
+#ov .sec .seg button.on{background:linear-gradient(#fde047,#f59e0b);color:#3b1d00;box-shadow:0 3px 0 #b45309}
+#ov .sec button.main{background:linear-gradient(#a78bfa,#7c3aed);color:#fff}
+#ov .sec button.ok{background:linear-gradient(#4ade80,#16a34a);color:#fff}
+.sec input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.95);border:2px solid #7c3aed}
+@media (max-height:520px){.pn-b{padding:8px;gap:8px}.sec{padding:8px;gap:6px}#ov .sec button{padding:7px 10px;font-size:13px}.sec input{padding:7px;font-size:14px}.pn-h{padding:5px 12px}}
+@media (max-width:560px){.pn-b{grid-template-columns:1fr}}

@@ -1,4 +1,4 @@
-const CACHE = 'obby3d-v14';
+const CACHE = 'obby3d-v15';
 const ARCHIVOS = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
 self.addEventListener('install', e => {

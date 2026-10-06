@@ -348,7 +348,8 @@ function gfx(n) {
 function cambiarG(n) { gfx(n); build(world); p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0, dj: true }; cp = { x: 0, y: 0, z: 0 }; config(); }
 function config() {
   st = 'cfg';
-  ov('<b>CONFIGURACIÓN</b><small>Gráficos</small><div class="seg">' + ['Suave', 'Estándar', 'Ultra'].map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + ['Más fluido y rápido, con menos detalle', 'Equilibrado', 'Sombras reales, más detalle y más distancia (gasta más batería)'][G] + '</small>' + bt('ctl', '🎮 Controles') + '<small>Código</small><input id="cod" type="password" placeholder="Código" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' + bt('adm', 'Entrar') + bt('menu', 'Volver'));
+  const gi = ['🍃 Suave', '⚖️ Estándar', '✨ Ultra'], gd = ['Más fluido y rápido, con menos detalle', 'Equilibrado: buen detalle y buen rendimiento', 'Sombras reales, más detalle y distancia (gasta más batería)'];
+  ov('<div class="pn"><div class="pn-h"><b>⚙️ CONFIGURACIÓN</b>' + bt('menu', '✕', 'x') + '</div><div class="pn-b"><div class="sec"><h4>🎨 GRÁFICOS</h4><div class="seg">' + gi.map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + gd[G] + '</small></div><div class="sec"><h4>🎮 CONTROLES</h4><small>Tamaño, posición y sensibilidad de los botones</small>' + bt('ctl', 'Editar controles', 'main') + '<h4>🔐 CÓDIGO</h4><input id="cod" type="password" placeholder="Escribe el código" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' + bt('adm', 'Entrar', 'ok') + '</div></div></div>');
 }
 function entrar() { const i = $('cod'); if (i && ADMIN.includes(norm(i.value))) activarAdm(); else if (i) { i.value = ''; i.placeholder = 'Código incorrecto'; } }
 function admin() {
@@ -509,7 +510,7 @@ function netStep(dt) {
 const RK = [['Bronce', '🥉', 0, 0], ['Plata', '🥈', 80, .06], ['Oro', '🥇', 150, .12], ['Platino', '💠', 250, .18], ['Esmeralda', '💚', 350, .24], ['Diamante', '💎', 500, .3], ['Maestro', '🔮', 700, .36], ['Gran Maestro', '👑', 900, .42], ['Élite', '🔥', 1200, .48], ['Leyenda', '🏆', 1600, .55]];
 const CUM = [0]; for (let i = 0; i < 9; i++) CUM.push(CUM[i] + 40 + i * 10);
 const RKC = ['#cd7f32', '#cbd5e1', '#facc15', '#67e8f9', '#34d399', '#60a5fa', '#c084fc', '#f472b6', '#fb923c', '#f43f5e'];
-const ACC = { menu: '#facc15', shop: '#60a5fa', rew: '#fb923c', clo: '#c084fc', cfg: '#94a3b8', ctl: '#2dd4bf', onl: '#4ade80', rk: '#fbbf24', win: '#4ade80', adm: '#a78bfa' };
+const ACC = { menu: '#facc15', shop: '#60a5fa', rew: '#fb923c', clo: '#c084fc', cfg: '#a78bfa', ctl: '#2dd4bf', onl: '#4ade80', rk: '#fbbf24', win: '#4ade80', adm: '#a78bfa' };
 const rangoDe = p2 => { let r = 0; while (r < 9 && p2 >= CUM[r + 1]) r++; return r; };
 function cobrarRango() { const r = rangoDe(rp); let g = 0; while (rkc < r) { rkc++; g += RK[rkc][2]; } if (g) { coins += g; sv(); } return g; }
 function rangoUI() {
