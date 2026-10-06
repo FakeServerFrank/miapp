@@ -95,3 +95,19 @@ body.ctl #base,body.ctl #bj{outline:2px dashed #fde047;outline-offset:4px}
 .pct{font-size:22px;font-weight:bold;color:var(--ac,#facc15)}
 #hud{background:linear-gradient(90deg,rgba(124,58,237,.75),rgba(236,72,153,.65))}
 .sb,#bc{background:linear-gradient(160deg,rgba(124,58,237,.7),rgba(15,23,42,.75));border:1px solid rgba(255,255,255,.28)}
+#lobby{display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:4;pointer-events:none}
+#lobby *{pointer-events:auto}
+#lb-prof{position:fixed;left:10px;top:calc(8px + env(safe-area-inset-top));display:flex;gap:8px;align-items:center;background:linear-gradient(90deg,rgba(15,23,42,.88),rgba(15,23,42,.4));border:2px solid var(--ac,#cd7f32);border-radius:14px;padding:6px 14px 6px 8px;color:#fff}
+#lb-ic{font-size:34px}
+#lb-prof b{display:block;font-size:15px}#lb-prof small{display:block;font-size:12px;opacity:.9}
+#lb-prof .pb{width:120px;height:7px;margin-top:3px}
+#lb-coins{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);background:rgba(15,23,42,.85);border:2px solid #facc15;color:#facc15;font:bold 18px sans-serif;padding:4px 18px;border-radius:999px}
+#lb-right{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;width:210px}
+.lb-row{display:flex;gap:8px}
+#lb-right button{flex:1;font:bold 15px sans-serif;border:0;border-radius:12px;padding:10px;color:#fff;background:linear-gradient(#4ade80,#16a34a);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+#lb-right button.gold{background:linear-gradient(#fbbf24,#d97706)}
+#lb-play{font-size:26px!important;padding:12px!important;background:linear-gradient(#ffe066,#ff8f00)!important;color:#3b1d00!important}
+#lb-play small{display:block;font-size:11px;font-weight:bold;opacity:.85}
+#bw.dot::after{content:'';position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#ef4444;border:2px solid #fff}
+body.lobby #hud,body.lobby #bar,body.lobby #base,body.lobby #bj,body.lobby #zl,body.lobby #zr{display:none}
+#toast{white-space:pre-line;text-align:center;border-radius:16px;line-height:1.5;border:2px solid #facc15}

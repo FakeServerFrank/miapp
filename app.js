@@ -114,7 +114,7 @@ let FR = 10, thN = '', AN = [], GEMS = [], bst = 0, hcd = 0;
 let G = 1; try { const gs = localStorage.getItem('graficos'); if (gs !== null && +gs >= 0 && +gs <= 2) G = +gs; } catch (e) {}
 const DEC = [10, 40, 100];
 function build(w) {
-  if (W) sc.remove(W);
+  if (W) { sc.remove(W); W.traverse(o => { if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); } if (o.geometry && o.geometry !== BX) o.geometry.dispose(); }); }
   W = new THREE.Group(); sc.add(W); AN = []; GEMS = [];
   const r = rnd(w * 977 + 13), ti = (w - 1) % TH.length, th = TH[ti], lay = (w * 3 + 1) % 4;
   FR = th.fr; thN = NOM[ti]; const HO = [0, 30, -20, 60, -40, 20, -10, 90][ti];
@@ -243,9 +243,25 @@ function aplicar() { const s = SC.find(x => x.id === eq) || SC[0]; ST = { s: 1 +
   barM.material.color.setHex(s.bar || 0xcccccc); stemM.material.color.setHex(s.bar || 0xcccccc);
   fin.visible = !!s.fin; if (s.fin) fin.material.color.setHex(s.fin);
   trail.material.color.setHex(s.tr.c); TS = Object.assign({ acc: 0 }, s.tr); vestir(); deckM.material.color.setHex(s.c); }
-function ov(h) { document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); o.style.setProperty('--ac', ACC[st] || '#facc15'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
+function ov(h) { lobbyShow(st === 'menu'); document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); o.style.setProperty('--ac', ACC[st] || '#facc15'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
 const bt = (a, t, c) => '<button class="' + (c || '') + '" data-a="' + a + '">' + t + '</button>';
-function menu() { st = 'menu'; ov('<b>OBBY SCOOTER 3D</b><small>Joystick: moverte · Arrastra a la derecha: girar la cámara<br>SALTAR: saltar · Banderas verdes: checkpoint</small><span>🪙 ' + coins + '</span>' + bt('play', world > 1 ? 'Continuar: Mundo ' + world : 'Jugar') + bt('shop', 'Tienda') + bt('cfg', 'Configuración') + bt('on', '🌐 Online') + bt('rk', '🏆 Rango')); }
+function lobbyShow(on) { $('lobby').style.display = on ? 'block' : 'none'; document.body.classList.toggle('lobby', on); }
+function refrescarLobby() {
+  const r = rangoDe(rp), top = r >= 9, pc = top ? 100 : Math.floor((rp - CUM[r]) / (CUM[r + 1] - CUM[r]) * 100);
+  $('lb-ic').textContent = RK[r][1]; $('lb-nick').textContent = nick; $('lb-rk').textContent = RK[r][0] + ' · ' + (top ? rp + ' pts' : pc + '%');
+  $('lb-bar').style.width = pc + '%'; $('lb-coins').textContent = '🪙 ' + coins; $('lb-w').textContent = 'Mundo ' + world + ' · ' + NOM[(world - 1) % NOM.length];
+  $('lb-prof').style.setProperty('--ac', RKC[r]); $('bw').classList.toggle('dot', dia !== new Date().toDateString());
+}
+function menu() {
+  st = 'menu'; build(world);
+  p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0, dj: true }; cp = { x: 0, y: 0, z: 0 }; yaw = 0;
+  refrescarLobby(); ov(null);
+}
+$('lobby').addEventListener('pointerdown', e => {
+  const el = e.target.closest ? e.target.closest('[data-l]') : null, a = el && el.dataset.l;
+  if (!a || st !== 'menu') return; e.preventDefault();
+  if (a === 'play') start(); else if (a === 'on') onlineUI(); else if (a === 'rk') rangoUI();
+});
 function tienda() {
   st = 'shop';
   ov('<b>TIENDA</b><span>🪙 ' + coins + '</span>' + SC.map(s => {
@@ -412,7 +428,7 @@ function reclamar(x) {
   sv(); recompensas();
 }
 const AV = {};
-function toast(t) { const e = $('toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => { e.style.display = 'none'; }, 4000); }
+function toast(t, ms) { const e = $('toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => { e.style.display = 'none'; }, ms || 4000); }
 function peerJS(cb) {
   if (navigator.onLine === false) return onlineUI('Sin internet: el modo online necesita conexión.');
   if (typeof Peer !== 'undefined') return cb();
@@ -509,18 +525,16 @@ function start() {
 }
 function morir() { caidas++; p.x = cp.x; p.y = cp.y + .05; p.z = cp.z; p.vx = p.vy = p.vz = 0; p.on = null; p.coy = .1; }
 function terminar() {
-  if (net.on) { netFin(); toast('🏁 ¡Llegaste en ' + t.toFixed(1) + ' s!'); coins += 10; sv(); st = 'win'; return ov('<div class="card"><div class="stars">🏁</div><b>¡Llegaste a la meta!</b><div class="chips"><i>🪙 +10</i><i>⏱ ' + t.toFixed(1) + ' s</i></div><div class="bts">' + bt('on', 'Sala online') + bt('menu', 'Menú') + '</div></div>'); }
+  if (net.on) { netFin(); coins += 10; sv(); toast('🏁 ¡Llegaste en ' + t.toFixed(1) + ' s!  +10 🪙', 4500); return onlineUI(); }
   const nuevo = world > done, pts = nuevo ? (caidas <= 2 ? 10 : 3) : 0, est = caidas === 0 ? 3 : caidas <= 3 ? 2 : 1;
   const gan = Math.round((nuevo ? 20 + world * 3 + (caidas === 0 ? 5 : 0) : 5) * (1 + RK[rangoDe(rp)][3]));
   if (nuevo) done = world;
   rp += pts; coins += gan; const gr = cobrarRango();
   let fx = false; if (world === MAX && !owned.includes('7')) { owned.push('7'); fx = true; }
   const r = rangoDe(rp), top = r >= 9, pc = top ? 100 : Math.floor((rp - CUM[r]) / (CUM[r + 1] - CUM[r]) * 100);
-  world++; sv(); st = 'win';
-  ov('<div class="card"><div class="stars">' + '⭐'.repeat(est) + '☆'.repeat(3 - est) + '</div><b>Mundo ' + (world - 1) + ' completado</b><div class="chips"><i>🪙 +' + gan + '</i><i>🏆 +' + pts + ' pts</i><i>💥 ' + caidas + '</i></div>' +
-    (gr ? '<small>🎉 ¡Subiste a ' + RK[rkc][1] + ' ' + RK[rkc][0] + '! +' + gr + ' 🪙</small>' : '') + (fx ? '<small>🛴 ¡Desbloqueaste el Fénix Legendario!</small>' : '') +
-    '<div class="rn">' + RK[r][1] + ' ' + RK[r][0] + '</div><div class="pb"><i style="width:' + pc + '%"></i></div><small>' + (top ? rp + ' puntos' : pc + '% para ' + RK[r + 1][1] + ' ' + RK[r + 1][0]) + ' · Siguiente: ' + NOM[(world - 1) % NOM.length] + '</small><div class="bts">' + bt('play', 'Siguiente mundo ▶') + bt('menu', 'Menú') + '</div></div>');
-  $('ov').style.setProperty('--ac', RKC[r]);
+  world++; sv();
+  toast('🎉 Mundo ' + (world - 1) + ' completado  ' + '⭐'.repeat(est) + '☆'.repeat(3 - est) + '\n🪙 +' + gan + '   🏆 +' + pts + ' pts   💥 ' + caidas + (gr ? '\n⬆ ¡Subiste a ' + RK[rkc][1] + ' ' + RK[rkc][0] + '! +' + gr + ' 🪙' : '') + (fx ? '\n🛴 ¡Desbloqueaste el Fénix Legendario!' : ''), 5500);
+  menu();
 }
 $('ov').addEventListener('pointerdown', e => {
   const a = e.target.dataset && e.target.dataset.a;
@@ -665,9 +679,12 @@ function render(dt) {
     pg.attributes.position.needsUpdate = true;
   }
   if (G === 2) { sun.position.set(p.x + 8, p.y + 22, p.z + 10); sun.target.position.set(p.x, p.y, p.z); sun.target.updateMatrixWorld(); }
+  if (st === 'menu') { const a = tm * .35; cam.position.set(p.x + Math.sin(a) * 4.4, p.y + 1.9, p.z + Math.cos(a) * 4.4); cam.lookAt(p.x, p.y + 1.1, p.z); cam.translateX(1.6); }
+  else {
   const por = cam.aspect < 1, bk = por ? 12 : 8.5, hh = por ? 7 : 5.2, sn = Math.sin(cy), cs = Math.cos(cy);
   cam.position.lerp(new THREE.Vector3(p.x + sn * bk, p.y + hh, p.z + cs * bk), Math.min(1, dt * 5));
   cam.lookAt(p.x - sn * 5, p.y + 1.2, p.z - cs * 5);
+  }
   const h = RK[rangoDe(rp)][1] + ' ' + RK[rangoDe(rp)][0] + ' · Mundo ' + world + ' · ' + thN + '   🪙 ' + coins + '   Caídas: ' + caidas + (net.on ? '   🌐 ' + (Object.keys(AV).length + 1) : '');
   if (h !== hudT) { $('hud').textContent = h; hudT = h; }
   $('fill').style.width = Math.max(0, Math.min(p.z / endZ, 1)) * 100 + '%';
