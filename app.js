@@ -136,11 +136,11 @@ function build(w) {
   const add = (o, m) => { const pr = Math.min(P.length / (n + 2), 1), col = o.k === 'm' ? 0x3b82f6 : o.k === 'd' ? 0xf59e0b : new THREE.Color().setHSL(((220 + pr * 140 + HO) % 360) / 360, .72, .55);
     o.mesh = box(o.x, o.y - .5, o.z, o.w, 1, o.d, mt(col, CHK, o.w / 1.4, o.d / 1.4)); if (false) { const c = new THREE.Mesh(BX, capM); c.scale.set(1.02, .17, 1.02); c.position.set(0, .43, 0); o.mesh.add(c); } o.bx = o.x; o.dx = 0; o.tm = 0; o.hide = 0; P.push(o); return o; };
   P = [];
-  const sz = Math.max(8 - w * .12, 3.5), n = Math.min(12 + Math.floor(w * .7), 60), gmax = Math.min((2.4 + w * .1) * (1 + Math.floor((w - 1) / 6) * .02), 6.9);
+  const sz = Math.max(8 - w * .12, 3.5), n = w === 1 ? 8 : w === 2 ? 10 : Math.min(12 + Math.floor(w * .7), 60), gmax = Math.min((2.4 + w * .1) * (1 + Math.floor((w - 1) / 6) * .02), 6.9);
   add({ x: 0, y: 0, z: 0, w: 10, d: 10, k: 'n', cp: 1 }, mN[0]);
   let prev = 'n';
   for (let i = 1; i <= n; i++) {
-    const cpl = i % (w < 30 ? 6 : w < 60 ? 7 : 9) === 0, q = r(); let k = 'n';
+    const cpl = i % (w < 4 ? 4 : w < 30 ? 6 : w < 60 ? 7 : 9) === 0, q = r(); let k = 'n';
     if (!cpl && w >= 3 && q < Math.min(.12 + w * .01, .38)) k = 'm';
     else if (!cpl && w >= 7 && q < Math.min(.32 + w * .01, .58)) k = 'd';
     const d = sz + r() * 1.5, pz = P[P.length - 1];
@@ -234,9 +234,9 @@ function build(w) {
   }
 }
 
-let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, rp = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
-try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; rkc = +localStorage.getItem('rkc') || 0; { const q = localStorage.getItem('rp'); rp = q === null ? done * 6 : +q; } tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
-const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('rp', rp); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
+let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, rp = 0, STAT = {}, tuto = 0, tt = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
+try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; STAT = JSON.parse(localStorage.getItem('stats') || '{}'); tuto = +localStorage.getItem('tuto') || 0; rkc = +localStorage.getItem('rkc') || 0; { const q = localStorage.getItem('rp'); rp = q === null ? done * 6 : +q; } tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
+const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('rp', rp); localStorage.setItem('stats', JSON.stringify(STAT)); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
 const SC = [
   { id: '0', n: 'Clásico', pr: 0, s: 0, a: 0, j: 0, c: 0x222222, dk: [1, 1], wr: 1, tr: { c: 0xbbbbbb, rise: .3, spr: .3, rate: 6 } },
   { id: '1', n: 'Turbo Rojo', pr: 150, s: .08, a: .1, j: 0, c: 0xdc2626, dk: [1, 1.05], wr: 1.1, bar: 0xdc2626, tr: { c: 0xff3b1f, rise: 1.5, spr: .15, rate: 40 } },
@@ -252,7 +252,7 @@ function aplicar() { const s = SC.find(x => x.id === eq) || SC[0]; ST = { s: 1 +
   barM.material.color.setHex(s.bar || 0xcccccc); stemM.material.color.setHex(s.bar || 0xcccccc);
   fin.visible = !!s.fin; if (s.fin) fin.material.color.setHex(s.fin);
   trail.material.color.setHex(s.tr.c); TS = Object.assign({ acc: 0 }, s.tr); vestir(); deckM.material.color.setHex(s.c); }
-function ov(h) { lobbyShow(st === 'menu'); document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); o.style.setProperty('--ac', ACC[st] || '#facc15'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
+function ov(h) { lobbyShow(st === 'menu'); document.body.classList.toggle('inplay', st === 'play'); if (st !== 'play') $('tip').style.display = 'none'; document.body.classList.toggle('ctl', st === 'ctl'); const o = $('ov'); o.style.setProperty('--ac', ACC[st] || '#facc15'); if (h === null) o.style.display = 'none'; else { o.innerHTML = '<div class="in">' + h + '</div>'; o.style.display = 'flex'; tc = performance.now(); } }
 const bt = (a, t, c) => '<button class="' + (c || '') + '" data-a="' + a + '">' + t + '</button>';
 function lobbyShow(on) { $('lobby').style.display = on ? 'block' : 'none'; document.body.classList.toggle('lobby', on); }
 function refrescarLobby() {
@@ -268,7 +268,7 @@ function menu() {
 }
 $('lobby').addEventListener('pointerdown', e => {
   const el = e.target.closest ? e.target.closest('[data-l]') : null, a = el && el.dataset.l;
-  if (!a || st !== 'menu') return; e.preventDefault();
+  if (!a || st !== 'menu') return; e.preventDefault(); sfx('click');
   if (a === 'play') start(); else if (a === 'on') onlineUI(); else if (a === 'rk') rangoUI();
 });
 function tienda() {
@@ -316,13 +316,14 @@ function admPanel() {
     j: tgl('god', '🛡 Invencible') + tgl('spd', '⚡ Velocidad x2') + tgl('inf', '⇈ Saltos infinitos') + tgl('fly', '🕊 Volar') + bn('cp', '📍 Al checkpoint'),
     m: bn('rp', '🏆 +50 puntos') + bn('ant10', '◀◀ Mundo −10') + bn('sig10', 'Mundo +10 ▶▶') + bn('ant', '◀ Mundo −1') + bn('sig', 'Mundo +1 ▶') + bn('skip', '🏁 Completar') + bn('meta', '🚩 Ir a la meta') + bn('rein', '↻ Reiniciar'),
     t: bn('mon', '🪙 +1000') + bn('mon10', '🪙 +10000') + bn('monopatines', '🛴 Todos los monopatines') + bn('ropas', '👕 Toda la ropa') + bn('cero', '🪙 Poner en 0'),
-    s: bn('off', '⏻ Desactivar admin') + bn('reset', adm.cf ? '⚠ ¿Seguro? Toca otra vez' : '⚠ Borrar progreso')
+    s: bn('stats', '📊 Estadísticas') + bn('off', '⏻ Desactivar admin') + bn('reset', adm.cf ? '⚠ ¿Seguro? Toca otra vez' : '⚠ Borrar progreso')
   }[adm.tab];
   a.innerHTML = '<button data-d="abrir" class="ah">🛠 Admin ' + (adm.open ? '▾' : '▸') + '</button>' + (adm.open ? '<div class="at">' + ATABS.map(x => '<button data-d="tab:' + x[0] + '" class="' + (adm.tab === x[0] ? 'on' : '') + '">' + x[1] + '</button>').join('') + '</div><div class="ab">' + body + '</div>' : '');
 }
 function admAct(k) {
   const cf = adm.cf; adm.cf = false;
-  if (k === 'abrir') adm.open = !adm.open;
+  if (k === 'stats') return statsUI();
+  else if (k === 'abrir') adm.open = !adm.open;
   else if (k.startsWith('tab:')) adm.tab = k.slice(4);
   else if (k === 'rp') { rp += 50; cobrarRango(); sv(); } else if (k === 'mon') { coins += 1000; sv(); } else if (k === 'mon10') { coins += 10000; sv(); } else if (k === 'cero') { coins = 0; sv(); }
   else if (k === 'monopatines') { owned = SC.map(s => s.id); sv(); }
@@ -341,8 +342,8 @@ function activarAdm() { adm.on = true; adm.open = true; admPanel(); if (pausa) {
 $('am').addEventListener('pointerdown', e => { const k = e.target.dataset && e.target.dataset.d; if (k) { e.preventDefault(); admAct(k); } });
 const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 let pausa = false;
-const abrir = f => e => { e.preventDefault(); if (st === 'play') pausa = true; f(); };
-$('bs').addEventListener('pointerdown', abrir(tienda)); $('hud').addEventListener('pointerdown', abrir(rangoUI)); $('bw').addEventListener('pointerdown', abrir(recompensas)); $('bk').addEventListener('pointerdown', abrir(() => ropaUI())); $('bc').addEventListener('pointerdown', abrir(config));
+const abrir = f => e => { e.preventDefault(); sfx('click'); if (st === 'play') pausa = true; f(); };
+$('bs').addEventListener('pointerdown', abrir(tienda)); $('hud').addEventListener('pointerdown', abrir(rangoUI)); $('rt').addEventListener('pointerdown', e => { e.preventDefault(); if (st === 'play') { sfx('click'); start(); } }); $('bw').addEventListener('pointerdown', abrir(recompensas)); $('bk').addEventListener('pointerdown', abrir(() => ropaUI())); $('bc').addEventListener('pointerdown', abrir(config));
 let lk = 0;
 addEventListener('pointerdown', () => { if (lk) return; lk = 1; try { (document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : Promise.resolve()).then(() => screen.orientation && screen.orientation.lock('landscape')).catch(() => {}); } catch (e) {} });
 function gfx(n) {
@@ -359,7 +360,7 @@ function cambiarG(n) { gfx(n); build(world); p = { x: 0, y: 0, z: 0, vx: 0, vy: 
 function config() {
   st = 'cfg';
   const gi = ['🍃 Suave', '⚖️ Estándar', '✨ Ultra'], gd = ['Más fluido y rápido, con menos detalle', 'Equilibrado: buen detalle y buen rendimiento', 'Sombras reales, más detalle y distancia (gasta más batería)'];
-  ov('<div class="pn"><div class="pn-h"><b>⚙️ CONFIGURACIÓN</b>' + bt('menu', '✕', 'x') + '</div><div class="pn-b"><div class="sec"><h4>🎨 GRÁFICOS</h4><div class="seg">' + gi.map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + gd[G] + '</small></div><div class="sec"><h4>🎮 CONTROLES</h4><small>Tamaño, posición y sensibilidad de los botones</small>' + bt('ctl', 'Editar controles', 'main') + '<h4>🔐 CÓDIGO</h4><input id="cod" type="password" placeholder="Escribe el código" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' + bt('adm', 'Entrar', 'ok') + '</div></div></div>');
+  ov('<div class="pn"><div class="pn-h"><b>⚙️ CONFIGURACIÓN</b>' + bt('menu', '✕', 'x') + '</div><div class="pn-b"><div class="sec"><h4>🎨 GRÁFICOS</h4><div class="seg">' + gi.map((n, i) => bt('g:' + i, n, G === i ? 'on' : '')).join('') + '</div><small>' + gd[G] + '</small><h4>🔊 SONIDO</h4><div class="seg">' + [['fx', '🔊 Efectos'], ['mus', '🎵 Música'], ['vib', '📳 Vibra']].map(x => bt('s:' + x[0], x[1], SN[x[0]] ? 'on' : '')).join('') + '</div></div><div class="sec"><h4>🎮 CONTROLES</h4><small>Tamaño, posición y sensibilidad de los botones</small>' + bt('ctl', 'Editar controles', 'main') + '<h4>🔐 CÓDIGO</h4><input id="cod" type="password" placeholder="Escribe el código" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' + bt('adm', 'Entrar', 'ok') + '</div></div></div>');
 }
 function entrar() { const i = $('cod'); if (i && ADMIN.includes(norm(i.value))) activarAdm(); else if (i) { i.value = ''; i.placeholder = 'Código incorrecto'; } }
 function admin() {
@@ -528,18 +529,65 @@ function rangoUI() {
   ov('<div class="card"><div class="big">' + RK[r][1] + '</div><b class="rn">' + RK[r][0] + '</b><div class="pb big"><i style="width:' + pc + '%"></i></div><div class="pct">' + (top ? '¡Rango máximo!' : pc + '%') + '</div><small>' + (top ? rp + ' puntos acumulados' : (rp - CUM[r]) + ' / ' + nd + ' puntos · siguiente: ' + RK[r + 1][1] + ' ' + RK[r + 1][0]) + '</small><small>Cada mundo pasado da <b>10</b> puntos si te caes 2 veces o menos, y <b>3</b> si te caes más.</small></div>' + bt('menu', 'Volver'));
   $('ov').style.setProperty('--ac', RKC[r]);
 }
+let SN = { fx: 1, mus: 1, vib: 1 }, AC = null, mi = 0;
+try { SN = Object.assign(SN, JSON.parse(localStorage.getItem('snd') || '{}')); } catch (e) {}
+function audio() {
+  if (AC === null) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); setInterval(musica, 230); } catch (e) { AC = false; } }
+  if (AC && AC.state === 'suspended') AC.resume();
+  return AC;
+}
+function nota(f, d, ty, v, f2, dl) {
+  const a = AC; if (!a) return; const t0 = a.currentTime + (dl || 0), o = a.createOscillator(), g = a.createGain();
+  o.type = ty || 'square'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + d);
+  g.gain.setValueAtTime(v || .12, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + d); o.connect(g); g.connect(a.destination); o.start(t0); o.stop(t0 + d + .02);
+}
+function ruido(d, v) {
+  const a = AC; if (!a) return; const n = Math.floor(a.sampleRate * d), buf = a.createBuffer(1, n, a.sampleRate), ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  const s = a.createBufferSource(), g = a.createGain(); s.buffer = buf; g.gain.value = v || .15; s.connect(g); g.connect(a.destination); s.start();
+}
+const SFX = {
+  jump: () => nota(300, .15, 'square', .1, 700), jump2: () => nota(450, .15, 'square', .1, 900), land: () => ruido(.08, .12),
+  fall: () => nota(500, .5, 'sawtooth', .12, 80), check: () => { nota(660, .12, 'triangle', .15); nota(990, .2, 'triangle', .15, 0, .12); },
+  gem: () => nota(1200, .1, 'sine', .12, 1800), hit: () => { ruido(.25, .25); nota(120, .25, 'sawtooth', .15, 50); }, tramp: () => nota(200, .3, 'sine', .2, 900),
+  win: () => [523, 659, 784, 1047].forEach((f, i) => nota(f, .25, 'triangle', .16, 0, i * .12)), rank: () => [392, 523, 659, 784, 1047].forEach((f, i) => nota(f, .35, 'square', .12, 0, i * .1)),
+  click: () => nota(800, .04, 'square', .05), boost: () => nota(300, .4, 'sawtooth', .08, 800)
+};
+function sfx(k) { if (SN.fx && audio()) try { SFX[k](); } catch (e) {} }
+function vib(ms) { if (SN.vib) try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+const MEL = [523, 0, 659, 0, 784, 659, 0, 523, 587, 0, 698, 0, 880, 698, 0, 587], BAS = [131, 131, 165, 165, 196, 196, 165, 165];
+function musica() {
+  if (!AC || !SN.mus || AC.state !== 'running') return;
+  const lobby = st === 'menu', v = lobby ? .05 : .022, f = MEL[mi % MEL.length];
+  if (f) nota(f * (lobby ? 1 : .5), .22, 'square', v); if (mi % 2 === 0) nota(BAS[(mi / 2) % BAS.length], .4, 'triangle', v * 1.6); mi++;
+}
+addEventListener('pointerdown', () => audio());
+function sndAct(x) { SN[x] = SN[x] ? 0 : 1; try { localStorage.setItem('snd', JSON.stringify(SN)); } catch (e) {} sfx('click'); if (x === 'vib') vib(30); config(); }
+function statsUI() {
+  st = 'adm';
+  const L = Object.keys(STAT).map(k => Object.assign({ w: +k }, STAT[k])).filter(x => x.e > 0).sort((a, c) => (c.c / c.e) - (a.c / a.e)).slice(0, 8);
+  ov('<div class="pn" data-t="cfg"><div class="pn-h"><b>📊 DÓNDE SE ATORAN</b>' + bt('menu', '✕', 'x') + '</div><div class="pn-g">' + (L.length ? L.map(x => '<div class="it"><span>Mundo ' + x.w + '</span><small>' + x.e + ' intentos<br>' + x.c + ' caídas<br>' + Math.round(x.n / x.e * 100) + '% lo pasa</small></div>').join('') : '<small>Aún no hay datos. Juega un rato.</small>') + '</div></div>');
+}
+const TIPS = ['🕹 Mueve el scooter con el joystick', '⬆ Toca SALTAR para saltar', '👆 Arrastra el dedo a la derecha para girar la cámara', '🏁 Llega a la bandera de cuadros · las verdes guardan tu avance'];
+function tutoStep(dt) {
+  const e = $('tip');
+  if (tuto || world !== 1) { e.style.display = 'none'; return; }
+  tt += dt; const i = Math.floor(tt / 5);
+  if (i >= TIPS.length) { tuto = 1; try { localStorage.setItem('tuto', 1); } catch (er) {} e.style.display = 'none'; return; }
+  e.textContent = TIPS[i]; e.style.display = 'block';
+}
 function start() {
-  build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false;
+  build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false; tt = 0; STAT[world] = STAT[world] || { e: 0, c: 0, n: 0, t: 0 }; STAT[world].e++;
   p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0, dj: true };
   cp = { x: 0, y: 0, z: 0 }; cam.position.set(0, 6, 10); st = 'play'; ov(null);
 }
-function morir() { caidas++; p.x = cp.x; p.y = cp.y + .05; p.z = cp.z; p.vx = p.vy = p.vz = 0; p.on = null; p.coy = .1; }
+function morir() { sfx('fall'); vib(80); STAT[world] = STAT[world] || { e: 0, c: 0, n: 0, t: 0 }; STAT[world].c++; caidas++; p.x = cp.x; p.y = cp.y + .05; p.z = cp.z; p.vx = p.vy = p.vz = 0; p.on = null; p.coy = .1; }
 function terminar() {
   if (net.on) { netFin(); coins += 10; sv(); toast('🏁 ¡Llegaste en ' + t.toFixed(1) + ' s!  +10 🪙', 4500); return onlineUI(); }
   const nuevo = world > done, pts = nuevo ? (caidas <= 2 ? 10 : 3) : 0, est = caidas === 0 ? 3 : caidas <= 3 ? 2 : 1;
   const gan = Math.round((nuevo ? 20 + world * 3 + (caidas === 0 ? 5 : 0) : 5) * (1 + RK[rangoDe(rp)][3]));
   if (nuevo) done = world;
-  rp += pts; coins += gan; const gr = cobrarRango();
+  rp += pts; coins += gan; const gr = cobrarRango(); sfx(gr ? 'rank' : 'win'); vib(gr ? 120 : 50); STAT[world] = STAT[world] || { e: 0, c: 0, n: 0, t: 0 }; STAT[world].n++; STAT[world].t += t;
   let fx = false; if (world === MAX && !owned.includes('7')) { owned.push('7'); fx = true; }
   const r = rangoDe(rp), top = r >= 9, pc = top ? 100 : Math.floor((rp - CUM[r]) / (CUM[r + 1] - CUM[r]) * 100);
   world++; sv();
@@ -548,9 +596,9 @@ function terminar() {
 }
 $('ov').addEventListener('pointerdown', e => {
   const a = e.target.dataset && e.target.dataset.a;
-  if (!a || performance.now() - tc < 300) return;
+  if (!a || performance.now() - tc < 300) return; sfx('click');
   if (a === 'play') { if (st === 'final') { world = 1; sv(); } start(); }
-  else if (a === 'shop') tienda(); else if (a === 'menu') { if (pausa) { pausa = false; jx = jz = 0; st = 'play'; ov(null); } else menu(); } else if (a === 'cfg') config(); else if (a === 'rk') rangoUI(); else if (a === 'ctl') controlesUI(); else if (a.startsWith('o:')) ctlAct(a.slice(2)); else if (a === 'on') onlineUI(); else if (a.startsWith('n:')) netAct(a.slice(2)); else if (a.startsWith('c:')) ropaUI(a.slice(2)); else if (a.startsWith('p:')) ponerRopa(a.slice(2)); else if (a.startsWith('k:')) comprarRopa(a.slice(2)); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
+  else if (a === 'shop') tienda(); else if (a === 'menu') { if (pausa) { pausa = false; jx = jz = 0; st = 'play'; ov(null); } else menu(); } else if (a === 'cfg') config(); else if (a.startsWith('s:')) sndAct(a.slice(2)); else if (a === 'rk') rangoUI(); else if (a === 'ctl') controlesUI(); else if (a.startsWith('o:')) ctlAct(a.slice(2)); else if (a === 'on') onlineUI(); else if (a.startsWith('n:')) netAct(a.slice(2)); else if (a.startsWith('c:')) ropaUI(a.slice(2)); else if (a.startsWith('p:')) ponerRopa(a.slice(2)); else if (a.startsWith('k:')) comprarRopa(a.slice(2)); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
   else if (a[0] === 'r') reclamar(a.slice(2)); else if (a[0] === 'b') comprar(a.slice(2)); else if (a[0] === 'e') equipar(a.slice(2));
 });
 
@@ -581,7 +629,7 @@ addEventListener('keyup', e => { if (K[e.code]) keys[K[e.code]] = 0; });
 
 function update(dt) {
   if (st !== 'play' || innerHeight > innerWidth) return;
-  t += dt; bst -= dt; hcd -= dt; tj += dt; if (tj - tjs > 15) { tjs = tj; sv(); }
+  t += dt; bst -= dt; hcd -= dt; tj += dt; tutoStep(dt); if (tj - tjs > 15) { tjs = tj; sv(); }
   P.forEach(o => {
     if (o.mh) { o.mh.m.position.x = o.x + Math.sin(t * o.mh.sp + o.mh.ph) * o.mh.a; if (o.mh.ball) o.mh.m.rotation.z = -t * o.mh.sp * 3; }
     if (o.las) { o.las.on = Math.sin(t * o.las.sp + o.las.ph) > -.2; o.las.m.visible = o.las.on; }
@@ -608,8 +656,8 @@ function update(dt) {
   else if (p.on) { const sp = Math.hypot(p.vx, p.vz), f = Math.min(sp, FR * dt); if (sp > 0) { p.vx -= p.vx / sp * f; p.vz -= p.vz / sp * f; } }
   const sp2 = Math.hypot(p.vx, p.vz); if (sp2 > max) { p.vx *= max / sp2; p.vz *= max / sp2; }
   jb -= dt; p.coy -= dt;
-  if (jb > 0 && (p.on || p.coy > 0)) { p.vy = 9.5 * ST.j; p.on = null; p.coy = 0; jb = 0; }
-  else if (jb > 0 && (ST.dj || adm.inf) && (p.dj || adm.inf)) { p.vy = 9.5 * ST.j * .95; p.dj = false; jb = 0; }
+  if (jb > 0 && (p.on || p.coy > 0)) { p.vy = 9.5 * ST.j; p.on = null; p.coy = 0; jb = 0; sfx('jump'); vib(12); }
+  else if (jb > 0 && (ST.dj || adm.inf) && (p.dj || adm.inf)) { p.vy = 9.5 * ST.j * .95; p.dj = false; jb = 0; sfx('jump2'); }
   if (adm.fly) { p.vy = Math.max(p.vy - 3 * dt, -1.5); if (jb > 0) { p.vy = 8; jb = 0; } } else p.vy -= 24 * dt;
   const nx = p.x + p.vx * dt, nz = p.z + p.vz * dt; let ny = p.y + p.vy * dt, land = null;
   if (p.vy <= 0) for (const o of P) {
@@ -621,10 +669,10 @@ function update(dt) {
     p.vy = 0; p.on = land; p.coy = .12; p.dj = true;
     if (land.cp) {
       cp = { x: land.x, y: land.y, z: land.z };
-      if (land !== P[0] && !land.got && !net.on) { land.got = 1; const g = Math.round((world > done ? 5 + Math.floor(world / 6) : 1) * (1 + RK[rangoDe(rp)][3])); coins += g; toast('📍 Checkpoint · +' + g + ' 🪙'); }
+      if (land !== P[0] && !land.got && !net.on) { land.got = 1; const g = Math.round((world > done ? 5 + Math.floor(world / 6) : 1) * (1 + RK[rangoDe(rp)][3])); coins += g; toast('📍 Checkpoint · +' + g + ' 🪙'); sfx('check'); vib(30); }
     }
     if (land.k === 'd' && land.tm === 0) land.tm = .001;
-    if (land.tr && Math.hypot(p.x - land.x, p.z - land.z) < 1.3) { p.vy = 15; p.on = null; p.coy = 0; }
+    if (land.tr && Math.hypot(p.x - land.x, p.z - land.z) < 1.3) { p.vy = 15; p.on = null; p.coy = 0; sfx('tramp'); }
     if (land.end) return terminar();
   } else p.on = null;
   if (p.on && p.on.tun && Math.abs(p.x - p.on.x) < 1.7 && Math.abs(p.z - p.on.z) < 2.7) { bst = Math.max(bst, .3); p.vz -= 22 * dt; }
@@ -640,8 +688,9 @@ function update(dt) {
     if (o.las && o.las.on && hcd <= 0 && !adm.god && Math.abs(p.z - o.z) < .35 && Math.abs(p.x - o.x) < o.w / 2 + .5 && p.y < o.y + .9) { p.vz = 9; p.vy = 4; p.on = null; hcd = .7; }
     if (o.wall && Math.abs(p.x - o.x) < o.wall.w / 2 + .25 && Math.abs(p.z - o.z) < .75 && p.y < o.y + 1.2 && p.y > o.y - 1) { p.z = p.z > o.z ? o.z + .75 : o.z - .75; p.vz = 0; }
   }
+  if (hcd > .69) { sfx('hit'); vib(60); }
   for (const o of P) if (o.lava && Math.abs(p.x - o.x) < o.lava.w / 2 + .2 && Math.abs(p.z - o.z) < .8 && p.y < o.y + .7) { if (!adm.god) morir(); break; }
-  for (const q of GEMS) if (!q.got && Math.abs(p.x - q.x) < 1 && Math.abs(p.z - q.z) < 1 && Math.abs(p.y + .8 - q.y) < 1.5) { q.got = 1; q.m.visible = false; if (world > done && !net.on) coins += 1; }
+  for (const q of GEMS) if (!q.got && Math.abs(p.x - q.x) < 1 && Math.abs(p.z - q.z) < 1 && Math.abs(p.y + .8 - q.y) < 1.5) { q.got = 1; q.m.visible = false; sfx('gem'); if (world > done && !net.on) coins += 1; }
   if (p.y < -10) morir();
 }
 
@@ -658,7 +707,7 @@ function trailStep(dt, tm) {
 let sq = 0, lastOn = false, lastYaw = 0;
 function animar(dt, tm) {
   const sp = Math.hypot(p.vx, p.vz), on = !!p.on, k = Math.min(1, dt * 8);
-  if (on && !lastOn) sq = .18; lastOn = on; sq = Math.max(0, sq - dt * .9);
+  if (on && !lastOn) { sq = .18; if (st === 'play') sfx('land'); } lastOn = on; sq = Math.max(0, sq - dt * .9);
   H.scale.set(1 + sq * .5, 1 - sq, 1 + sq * .5);
   const dy = Math.atan2(Math.sin(yaw - lastYaw), Math.cos(yaw - lastYaw)) / Math.max(dt, .001); lastYaw = yaw;
   H.rotation.z += (Math.max(-.35, Math.min(.35, -dy * .04)) - H.rotation.z) * k;
