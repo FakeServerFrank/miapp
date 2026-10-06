@@ -37,13 +37,21 @@ const TXT = {
 };
 const TXS = { t1: 'stripe', t2: 'camo', t3: 'dots', t5: 'check', t6: 'stripe', t7: 'check', l1: 'stripe', l2: 'dots', l3: 'camo', l5: 'check', h1: 'stripe', h3: 'dots', h5: 'check', f1: 'stripe', f4: 'check', f5: 'dots', e1: 'check', e3: 'stripe', e4: 'dots', e5: 'check', n1: 'stripe', n2: 'check', n3: 'dots' };
 const SCTX = { '1': 'stripe', '2': 'check', '3': 'dots', '4': 'stripe', '5': 'dots', '6': 'check', '7': 'flame' };
+TXT.denim = mkT(g => { g.strokeStyle = 'rgba(0,0,40,.25)'; g.lineWidth = 1; for (let i = 0; i < 64; i += 4) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 64); g.stroke(); g.beginPath(); g.moveTo(0, i); g.lineTo(64, i); g.stroke(); } }, 3);
+TXT.knit = mkT(g => { g.fillStyle = 'rgba(0,0,0,.22)'; for (let i = 0; i < 64; i += 8) g.fillRect(i, 0, 3, 64); }, 3);
+TXT.metal = mkT(g => { g.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 64; i += 6) g.fillRect(0, i, 64, 1); g.fillStyle = 'rgba(255,255,255,.55)'; [[8, 8], [56, 8], [8, 56], [56, 56]].forEach(a => { g.beginPath(); g.arc(a[0], a[1], 3, 0, 7); g.fill(); }); }, 2);
+TXT.leather = mkT(g => { g.fillStyle = 'rgba(0,0,0,.2)'; for (let i = 0; i < 90; i++) g.fillRect((i * 37) % 64, (i * 53) % 64, 2, 2); }, 3);
+Object.assign(TXS, { t4: 'knit', h2: 'knit', l0: 'denim', t6: 'metal', h5: 'metal', f3: 'leather', f2: 'leather', e1: 'leather', e2: 'leather' });
+const WEAVE = mkT(g => { g.fillStyle = '#999'; g.fillRect(0, 0, 64, 64); g.strokeStyle = '#555'; g.lineWidth = 2; for (let i = -64; i < 128; i += 8) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 64, 64); g.stroke(); } }, 6);
+const matP = (c, s) => new THREE.MeshPhongMaterial({ color: c, shininess: s || 20, specular: 0x222222, bumpMap: WEAVE, bumpScale: .5 });
+const SHN = ['t5', 't6', 't7', 'h4', 'h5', 'h6', 'l5', 'f4', 'f5', 'e5', 'c2', 'c3'];
 const CHK = mkT(g => { g.fillStyle = 'rgba(0,0,0,.17)'; g.fillRect(0, 0, 32, 32); g.fillRect(32, 32, 32, 32); }, 1);
 const STR = mkT(g => { g.fillStyle = 'rgba(0,0,0,.12)'; g.fillRect(0, 0, 64, 32); }, 1);
 const BWT = mkT(g => { g.fillStyle = '#000'; g.fillRect(0, 0, 32, 32); g.fillRect(32, 32, 32, 32); }, 1);
-const mt = (c, t, rw, rd) => { const q = t.clone(); q.needsUpdate = true; q.repeat.set(rw, rd); return new THREE.MeshLambertMaterial({ color: c, map: q }); };
+const mt = (c, t, rw, rd) => { const q = t.clone(); q.needsUpdate = true; q.repeat.set(rw, rd); return G === 0 ? new THREE.MeshLambertMaterial({ color: c, map: q }) : new THREE.MeshPhongMaterial({ color: c, map: q, bumpMap: q, bumpScale: .35, shininess: 25, specular: 0x222222 }); };
 const H = new THREE.Group(); let deckM, wheelA, wheelB, stemM, barM;
 (function () {
-  const a = (g, c, x, y, z, rz) => { const m = new THREE.Mesh(g, mat(c)); m.position.set(x, y, z); if (rz) m.rotation.z = rz; H.add(m); return m; };
+  const a = (g, c, x, y, z, rz) => { const m = new THREE.Mesh(g, matP(c, 40)); m.position.set(x, y, z); if (rz) m.rotation.z = rz; H.add(m); return m; };
   deckM = a(new THREE.BoxGeometry(.5, .08, 1.4), 0x222222, 0, .25, 0);
   wheelA = a(new THREE.CylinderGeometry(.2, .2, .12, 12), 0x111111, 0, .2, -.6, Math.PI / 2);
   wheelB = a(new THREE.CylinderGeometry(.2, .2, .12, 12), 0x111111, 0, .2, .6, Math.PI / 2);
@@ -60,9 +68,10 @@ const wings = new THREE.Group(), wingMats = [], wingSides = [];
 wings.visible = false; H.add(wings);
 const fin = new THREE.Mesh(BX, mat(0xdc2626)); fin.scale.set(.06, .45, .5); fin.position.set(0, .5, .62); fin.visible = false; H.add(fin);
 H.rotation.order = 'YXZ';
+[barM, stemM].forEach(m => { m.material.shininess = 110; m.material.specular.setHex(0xffffff); }); deckM.material.shininess = 15;
 const RD = {};
 (function () {
-  const ad = (k, g, c, x, y, z) => { const o = new THREE.Mesh(g, mat(c)); o.position.set(x, y, z); H.add(o); RD[k] = o; };
+  const ad = (k, g, c, x, y, z) => { const o = new THREE.Mesh(g, matP(c)); o.position.set(x, y, z); H.add(o); RD[k] = o; };
   ad('skinL', new THREE.CylinderGeometry(.08, .08, .5, 8), 0xfcd34d, -.14, .5, .1); ad('skinR', new THREE.CylinderGeometry(.08, .08, .5, 8), 0xfcd34d, .14, .5, .1);
   ad('legL', new THREE.CylinderGeometry(.1, .1, .5, 8), 0x1e3a8a, -.14, .5, .1); ad('legR', new THREE.CylinderGeometry(.1, .1, .5, 8), 0x1e3a8a, .14, .5, .1);
   ad('shoeL', new THREE.BoxGeometry(.18, .1, .3), 0xffffff, -.14, .27, .05); ad('shoeR', new THREE.BoxGeometry(.18, .1, .3), 0xffffff, .14, .27, .05);
@@ -264,10 +273,11 @@ $('lobby').addEventListener('pointerdown', e => {
 });
 function tienda() {
   st = 'shop';
-  ov('<b>TIENDA</b><span>🪙 ' + coins + '</span>' + SC.map(s => {
+  ov('<div class="pn" data-t="shop"><div class="pn-h"><b>🛴 MONOPATINES</b><span class="co">🪙 ' + coins + '</span>' + bt('menu', '✕', 'x') + '</div><div class="pn-g">' + SC.map(s => {
     const has = owned.includes(s.id), on = eq === s.id;
-    return '<div class="row"><div>' + s.n + '<br><small>Vel +' + Math.round(s.s * 100) + '% · Acel +' + Math.round(s.a * 100) + '% · Salto +' + Math.round(s.j * 100) + '%' + (s.dj ? ' · ⇈ Doble salto' : '') + '</small></div>' + (on ? '<span>Equipado</span>' : has ? bt('e:' + s.id, 'Equipar') : s.ex ? '<span class="lk">🔒 ' + s.ex + '</span>' : bt('b:' + s.id, '🪙 ' + s.pr, coins < s.pr ? 'no' : '')) + '</div>';
-  }).join('') + bt('menu', 'Volver'));
+    return '<div class="it ' + (on ? 'puesto' : '') + '"><i style="background:#' + s.c.toString(16).padStart(6, '0') + '"></i><span>' + s.n + '</span><small>⚡' + Math.round(s.s * 100) + '% · 🚀' + Math.round(s.a * 100) + '% · ⬆' + Math.round(s.j * 100) + '%' + (s.dj ? '<br>⇈ Doble salto' : '') + '</small>' +
+      (on ? '<em>Equipado</em>' : has ? bt('e:' + s.id, 'Equipar') : s.ex ? '<span class="lk">🔒 ' + s.ex + '</span>' : bt('b:' + s.id, '🪙 ' + s.pr, coins < s.pr ? 'no' : '')) + '</div>';
+  }).join('') + '</div></div>');
 }
 function comprar(id) { const s = SC.find(x => x.id === id); if (!s || owned.includes(id) || coins < s.pr) return; coins -= s.pr; owned.push(id); eq = id; sv(); aplicar(); tienda(); }
 function equipar(id) { if (!owned.includes(id)) return; eq = id; sv(); aplicar(); tienda(); }
@@ -396,7 +406,7 @@ function vestir() {
   ['legL', 'legR'].forEach(k => { RD[k].material.color.setHex(l.c); RD[k].scale.y = l.sh ? .6 : 1; RD[k].position.y = l.sh ? .6 : .5; });
   ['shoeL', 'shoeR'].forEach(k => RD[k].material.color.setHex(f.c));
   [g('c'), g('e'), g('n')].forEach(x => { if (x.ty !== 'none') { RD[x.ty].visible = true; RD[x.ty].material.color.setHex(x.c); } });
-  const sm = (k, id) => { const m = RD[k].material, nt = TXT[TXS[id]] || null; if (m.map !== nt) { m.map = nt; m.needsUpdate = true; } };
+  const sm = (k, id) => { const m = RD[k].material, nt = TXT[TXS[id]] || null; if (m.map !== nt) { m.map = nt; m.needsUpdate = true; } const sh = SHN.includes(id); m.shininess = sh ? 90 : 10; m.specular.setHex(sh ? 0xbbbbbb : 0x1a1a1a); };
   ['torso', 'armL', 'armR'].forEach(k => sm(k, t.id)); ['legL', 'legR'].forEach(k => sm(k, l.id)); ['shoeL', 'shoeR'].forEach(k => sm(k, f.id));
   ['hel', 'crown', 'brim', 'topH'].forEach(k => sm(k, h.id)); [g('c'), g('e'), g('n')].forEach(x => { if (x.ty !== 'none') sm(x.ty, x.id); });
   const gl = g('g'); if (gl.ty !== 'none') ['gloveL', 'gloveR'].forEach(k => { RD[k].visible = true; RD[k].material.color.setHex(gl.c); });
@@ -404,10 +414,10 @@ function vestir() {
 function ropaUI(sl) {
   if (sl) rsl = sl; st = 'clo';
   const sh = SL.find(x => x[0] === rsl);
-  ov('<div class="ff"><div class="sl">' + SL.map(x => bt('c:' + x[0], x[1] + '<small>' + x[2] + '</small>', rsl === x[0] ? 'on' : '')).join('') + '</div><div class="gr2"><div class="gh"><b>' + sh[1] + ' ' + sh[2] + '</b><span>🪙 ' + coins + '</span></div><div class="gr">' + CLO[rsl].map(x => {
+  ov('<div class="pn" data-t="clo"><div class="pn-h"><b>👕 ROPA</b><span class="co">🪙 ' + coins + '</span>' + bt('menu', '✕', 'x') + '</div><div class="ff"><div class="sl">' + SL.map(x => bt('c:' + x[0], x[1] + '<small>' + x[2] + '</small>', rsl === x[0] ? 'on' : '')).join('') + '</div><div class="gr2"><div class="gh"><b>' + sh[1] + ' ' + sh[2] + '</b></div><div class="gr">' + CLO[rsl].map(x => {
     const has = ropa.includes(x.id), on = viste[rsl] === x.id;
     return '<div class="it ' + (on ? 'puesto' : '') + '"><i style="background:#' + (x.c ? x.c.toString(16).padStart(6, '0') : '444444') + '"></i><span>' + x.n + '</span>' + (on ? '<em>Puesto</em>' : has ? bt('p:' + x.id, 'Ponerse') : bt('k:' + x.id, '🪙 ' + x.pr, coins < x.pr ? 'no' : '')) + '</div>';
-  }).join('') + '</div>' + bt('menu', 'Volver') + '</div></div>');
+  }).join('') + '</div></div></div></div>');
 }
 function comprarRopa(id) { const it = Object.values(CLO).flat().find(x => x.id === id); if (!it || ropa.includes(id) || coins < it.pr) return; coins -= it.pr; ropa.push(id); viste[id[0]] = id; sv(); vestir(); ropaUI(); }
 function ponerRopa(id) { if (!ropa.includes(id)) return; viste[id[0]] = id; sv(); vestir(); ropaUI(); }
@@ -417,10 +427,9 @@ const ayer = () => new Date(Date.now() - 864e5).toDateString();
 function recompensas() {
   st = 'rew';
   const hoy = new Date().toDateString(), ns = dia === hoy ? racha : dia === ayer() ? racha + 1 : 1, min = tj / 60;
-  ov('<b>RECOMPENSAS</b><span>🪙 ' + coins + '</span><div class="row"><div>Recompensa diaria<br><small>Día ' + ns + ' de racha · 🪙 ' + RACHA[Math.min(ns, 7) - 1] + '</small></div>' + (dia === hoy ? '<span>✔ Reclamada</span>' : bt('r:dia', 'Reclamar')) + '</div>' + TIERS.map(x => {
-    const ok = rec.includes(x.id);
-    return '<div class="row"><div>Juega ' + x.m + ' min<br><small>' + (x.sc ? '🛴 Monopatín exclusivo' : '🪙 ' + x.c) + ' · ' + Math.min(Math.floor(min), x.m) + '/' + x.m + ' min</small></div>' + (ok ? '<span>✔ Reclamada</span>' : bt('r:' + x.id, 'Reclamar', min >= x.m ? '' : 'no')) + '</div>';
-  }).join('') + bt('menu', 'Volver'));
+  ov('<div class="pn" data-t="rew"><div class="pn-h"><b>🎁 RECOMPENSAS</b><span class="co">🪙 ' + coins + '</span>' + bt('menu', '✕', 'x') + '</div><div class="pn-g">' +
+    '<div class="it"><i class="em">📅</i><span>Recompensa diaria</span><small>Día ' + ns + ' de racha<br>🪙 ' + RACHA[Math.min(ns, 7) - 1] + '</small>' + (dia === hoy ? '<em>✔ Reclamada</em>' : bt('r:dia', 'Reclamar')) + '</div>' +
+    TIERS.map(x => '<div class="it"><i class="em">⏱</i><span>Juega ' + x.m + ' min</span><small>' + (x.sc ? '🛴 Monopatín exclusivo' : '🪙 ' + x.c) + '<br>' + Math.min(Math.floor(min), x.m) + '/' + x.m + ' min</small>' + (rec.includes(x.id) ? '<em>✔ Reclamada</em>' : bt('r:' + x.id, 'Reclamar', min >= x.m ? '' : 'no')) + '</div>').join('') + '</div></div>');
 }
 function reclamar(x) {
   const hoy = new Date().toDateString();
