@@ -154,3 +154,9 @@ body.lobby #hud,body.lobby #bar,body.lobby #base,body.lobby #bj,body.lobby #zl,b
 #rt{display:none;position:fixed;right:12px;top:calc(66px + env(safe-area-inset-top));width:42px;height:42px;border-radius:50%;background:linear-gradient(160deg,rgba(124,58,237,.7),rgba(15,23,42,.75));border:1px solid rgba(255,255,255,.28);color:#fff;font-size:22px;align-items:center;justify-content:center;z-index:6;touch-action:none}
 body.inplay #rt{display:flex}
 #tip{display:none;position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:60vw;text-align:center;background:rgba(15,23,42,.85);border:2px solid #facc15;color:#fff;font:bold 15px sans-serif;padding:8px 16px;border-radius:14px;z-index:6;pointer-events:none}
+#fl{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;opacity:0;z-index:7}
+#lb-right{width:260px}
+.lb-row button{font-size:12px!important;padding:9px 2px!important}
+#lb-right button.blue{background:linear-gradient(#60a5fa,#2563eb)}
+body.lobby #base,body.lobby #zl,body.lobby #zr{display:block}
+body.lobby #bj{display:flex}
