@@ -119,6 +119,7 @@ const TH = [
   { sky: 0, a: 0x5b6b8a, b: 0x7a8ab0, fl: 0x12012b, fr: 6, dc: 0, g: [0, 1, 4], cap: 0x93c5fd, tf: 0xa78bfa, gr: 0x1a1a3a, st: 0x000005, sb: 0x0b0b2a, su: 0xffffff, sd: [.4, .5, -1], pv: .2, pcl: 0xffffff, hs: 'sph', hl: 0x3b2f6b, sc: { tg: 'box', tc: 0x374151, tw: 1.6, h: [5, 18], pg: 'box', pc: 0x60a5fa, ph: .8, pw: 2, po: .5, bt: 1, rk: 0x6b7280, fl: 0xfde68a, bf: 1 } }
 ];
 const NOM = ['Pradera', 'Desierto', 'Hielo', 'Noche neón', 'Volcán', 'Selva', 'Playa', 'Espacio'];
+const CO = { x0: 8, x1: 18, z0: 2, z1: 12 };
 let FR = 10, thN = '', AN = [], GEMS = [], LB = false, stepT = 0, footMode = false, lbpos = null, bst = 0, hcd = 0;
 let G = 1; try { const gs = localStorage.getItem('graficos'); if (gs !== null && +gs >= 0 && +gs <= 2) G = +gs; } catch (e) {}
 const DEC = [10, 40, 100];
@@ -145,10 +146,20 @@ function build(w) {
     const fo = new THREE.Mesh(new THREE.CylinderGeometry(3, 3.4, .8, 20), mat(0x9ca3af)); fo.position.set(0, .4, 0); W.add(fo);
     const wa = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, .1, 20), new THREE.MeshBasicMaterial({ color: 0x38bdf8 })); wa.position.set(0, .82, 0); W.add(wa);
     for (let i = 0; i < 14; i++) {
-      const a = i / 14 * 6.283, rr = 18 + (i % 2) * 2, tx = Math.cos(a) * rr, tz = Math.sin(a) * rr; if (Math.abs(tx) < 7 && tz < -10) continue;
+      const a = i / 14 * 6.283, rr = 18 + (i % 2) * 2, tx = Math.cos(a) * rr, tz = Math.sin(a) * rr; if (Math.abs(tx) < 7 && tz < -10) continue; if (tx > CO.x0 - 2 && tx < CO.x1 + 3 && tz > CO.z0 - 2 && tz < CO.z1 + 3) continue;
       const tr = new THREE.Mesh(new THREE.CylinderGeometry(.35, .5, 3, 6), mat(th.sc.tc)); tr.position.set(tx, 1.5, tz); W.add(tr);
       const tp = new THREE.Mesh(new THREE.ConeGeometry(2, 4.5, 7), mat(th.sc.pc)); tp.position.set(tx, 5, tz); W.add(tp);
     }
+    const cx = (CO.x0 + CO.x1) / 2, cz = (CO.z0 + CO.z1) / 2, wd = CO.x1 - CO.x0, dp = CO.z1 - CO.z0, wood = mat(0x8b5a2b);
+    box(cx, .03, cz, wd, .06, dp, mt(0xd9b86c, STR, 3, 3));
+    const rail = (x, z, w, d) => { box(x, .45, z, w, .09, d, wood); box(x, .85, z, w, .09, d, wood); };
+    rail(cx, CO.z0, wd, .1); rail(cx, CO.z1, wd, .1); rail(CO.x1, cz, .1, dp); rail(CO.x0, CO.z0 + 1.5, .1, 3); rail(CO.x0, CO.z1 - 1.5, .1, 3);
+    for (let i = 0; i <= 4; i++) { box(CO.x0 + i * wd / 4, .5, CO.z0, .16, 1, .16, wood); box(CO.x0 + i * wd / 4, .5, CO.z1, .16, 1, .16, wood); }
+    for (let i = 1; i < 4; i++) box(CO.x1, .5, CO.z0 + i * dp / 4, .16, 1, .16, wood);
+    box(CO.x0, .5, CO.z0 + 3, .16, 1, .16, wood); box(CO.x0, .5, CO.z1 - 3, .16, 1, .16, wood);
+    const lc = document.createElement('canvas'); lc.width = 256; lc.height = 64; const g2 = lc.getContext('2d');
+    g2.font = 'bold 40px sans-serif'; g2.textAlign = 'center'; g2.lineWidth = 6; g2.strokeStyle = '#000'; g2.fillStyle = '#fde047'; g2.strokeText('🐾 CORRAL', 128, 46); g2.fillText('🐾 CORRAL', 128, 46);
+    const rs = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(lc) })); rs.scale.set(4, 1, 1); rs.position.set(CO.x0, 2.6, cz); W.add(rs);
     endZ = -16; return;
   }
   const sz = Math.max(8 - w * .12, 3.5), n = w === 1 ? 8 : w === 2 ? 10 : Math.min(12 + Math.floor(w * .7), 60), gmax = Math.min((2.4 + w * .1) * (1 + Math.floor((w - 1) / 6) * .02), 6.9);
@@ -249,9 +260,9 @@ function build(w) {
   }
 }
 
-let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, rp = 0, STAT = {}, BT = {}, tuto = 0, tt = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null, res: [] }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
-try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; STAT = JSON.parse(localStorage.getItem('stats') || '{}'); BT = JSON.parse(localStorage.getItem('bt') || '{}'); tuto = +localStorage.getItem('tuto') || 0; rkc = +localStorage.getItem('rkc') || 0; { const q = localStorage.getItem('rp'); rp = q === null ? done * 6 : +q; } tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
-const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('rp', rp); localStorage.setItem('stats', JSON.stringify(STAT)); localStorage.setItem('bt', JSON.stringify(BT)); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
+let coins = 0, owned = ['0'], eq = '0', done = 0, cy = 0, ST = { s: 1, a: 1, j: 1, dj: false }, tj = 0, tjs = 0, racha = 0, dia = '', rec = [], ropa = ['h0', 'c0', 't0', 'l0', 'f0', 'g0', 'e0', 'n0'], viste = { h: 'h0', c: 'c0', t: 't0', l: 'l0', f: 'f0', g: 'g0', e: 'e0', n: 'n0' }, rsl = 't', rkc = 0, rp = 0, STAT = {}, BT = {}, pets = ['p4'], corral = ['p4'], tuto = 0, tt = 0, net = { on: false, host: false, id: Math.random().toString(36).slice(2, 6), code: '', peer: null, conn: null, conns: [], states: {}, ls: 0, keep: null, res: [] }, nick = 'Jugador' + Math.floor(Math.random() * 90 + 10);
+try { coins = +localStorage.getItem('monedas') || 0; owned = JSON.parse(localStorage.getItem('patines') || '["0"]'); eq = localStorage.getItem('equipado') || '0'; done = +localStorage.getItem('hecho') || 0; STAT = JSON.parse(localStorage.getItem('stats') || '{}'); BT = JSON.parse(localStorage.getItem('bt') || '{}'); pets = JSON.parse(localStorage.getItem('pets') || '["p4"]'); corral = JSON.parse(localStorage.getItem('corral') || '["p4"]'); tuto = +localStorage.getItem('tuto') || 0; rkc = +localStorage.getItem('rkc') || 0; { const q = localStorage.getItem('rp'); rp = q === null ? done * 6 : +q; } tj = +localStorage.getItem('tjug') || 0; racha = +localStorage.getItem('racha') || 0; dia = localStorage.getItem('dia') || ''; rec = JSON.parse(localStorage.getItem('rec') || '[]'); ropa = JSON.parse(localStorage.getItem('ropa') || JSON.stringify(ropa)); viste = JSON.parse(localStorage.getItem('viste') || JSON.stringify(viste)); ropa = migra(ropa); viste = migraV(viste); nick = localStorage.getItem('nick') || nick; } catch (e) {}
+const sv = () => { try { localStorage.setItem('mundo', net.keep != null ? net.keep : world); localStorage.setItem('nick', nick); localStorage.setItem('monedas', coins); localStorage.setItem('patines', JSON.stringify(owned)); localStorage.setItem('equipado', eq); localStorage.setItem('hecho', done); localStorage.setItem('rkc', rkc); localStorage.setItem('rp', rp); localStorage.setItem('stats', JSON.stringify(STAT)); localStorage.setItem('bt', JSON.stringify(BT)); localStorage.setItem('pets', JSON.stringify(pets)); localStorage.setItem('corral', JSON.stringify(corral)); localStorage.setItem('tjug', Math.floor(tj)); localStorage.setItem('racha', racha); localStorage.setItem('dia', dia); localStorage.setItem('rec', JSON.stringify(rec)); localStorage.setItem('ropa', JSON.stringify(ropa)); localStorage.setItem('viste', JSON.stringify(viste)); } catch (e) {} };
 const SC = [
   { id: '0', n: 'Clásico', pr: 0, s: 0, a: 0, j: 0, c: 0x222222, dk: [1, 1], wr: 1, tr: { c: 0xbbbbbb, rise: .3, spr: .3, rate: 6 } },
   { id: '1', n: 'Turbo Rojo', pr: 150, s: .08, a: .1, j: 0, c: 0xdc2626, dk: [1, 1.05], wr: 1.1, bar: 0xdc2626, tr: { c: 0xff3b1f, rise: 1.5, spr: .15, rate: 40 } },
@@ -276,12 +287,74 @@ function refrescarLobby() {
   $('lb-bar').style.width = pc + '%'; $('lb-coins').textContent = '🪙 ' + coins; $('lb-w').textContent = 'Mundo ' + world + ' · ' + NOM[(world - 1) % NOM.length];
   $('lb-prof').style.setProperty('--ac', RKC[r]); $('bw').classList.toggle('dot', dia !== new Date().toDateString());
 }
+const PETS = [
+  { id: 'p1', n: 'Perrito', e: '🐶', pr: 100, b: 0xc8905a, ear: 'flop', ec: 0x7a4a24, s: 1 },
+  { id: 'p2', n: 'Gatito', e: '🐱', pr: 100, b: 0xf59e0b, ear: 'point', ec: 0xf59e0b, s: .9 },
+  { id: 'p3', n: 'Conejo', e: '🐰', pr: 150, b: 0xf3f4f6, ear: 'long', ec: 0xf3f4f6, s: .85 },
+  { id: 'p4', n: 'Pollito', e: '🐥', pr: 80, b: 0xfde047, ear: 'none', beak: 1, s: .55 },
+  { id: 'p5', n: 'Tortuga', e: '🐢', pr: 120, b: 0x65a30d, ear: 'none', shell: 0x15803d, s: .8 },
+  { id: 'p6', n: 'Zorrito', e: '🦊', pr: 250, b: 0xea580c, ear: 'point', ec: 0xea580c, s: .95 },
+  { id: 'p7', n: 'Panda', e: '🐼', pr: 400, b: 0xf9fafb, ear: 'round', ec: 0x111111, patch: 0x111111, s: 1.1 },
+  { id: 'p8', n: 'Unicornio', e: '🦄', pr: 800, b: 0xffffff, ear: 'point', ec: 0xf9a8d4, horn: 1, mane: 0xec4899, s: 1.25 }
+];
+const CAP = 6; let PETM = [];
+function mkPet(d) {
+  const g = new THREE.Group(), S = new THREE.SphereGeometry(.5, 10, 8);
+  const ad = (geo, c, x, y, z, sx, sy, sz) => { const m = new THREE.Mesh(geo, mat(c)); m.position.set(x, y, z); if (sx) m.scale.set(sx, sy, sz); g.add(m); return m; };
+  ad(S, d.b, 0, .45, 0, .7, .55, .95); ad(S, d.b, 0, .85, -.42, .5, .5, .5);
+  ad(S, 0x111111, -.09, .92, -.63, .09, .09, .09); ad(S, 0x111111, .09, .92, -.63, .09, .09, .09);
+  if (d.patch) { ad(S, d.patch, -.11, .93, -.6, .13, .13, .06); ad(S, d.patch, .11, .93, -.6, .13, .13, .06); }
+  [-1, 1].forEach(sx => {
+    ad(BX, d.patch || d.b, sx * .2, .12, -.3, .12, .25, .12); ad(BX, d.patch || d.b, sx * .2, .12, .3, .12, .25, .12);
+    if (d.ear === 'flop') { const e = ad(BX, d.ec, sx * .22, .88, -.4, .1, .22, .06); e.rotation.z = sx * .35; }
+    else if (d.ear === 'point') { const e = ad(new THREE.ConeGeometry(.1, .28, 6), d.ec, sx * .13, 1.14, -.4); e.rotation.z = -sx * .15; }
+    else if (d.ear === 'long') { const e = ad(BX, d.ec, sx * .09, 1.2, -.38, .08, .42, .06); e.rotation.z = sx * .1; }
+    else if (d.ear === 'round') ad(S, d.ec, sx * .17, 1.05, -.42, .14, .14, .1);
+  });
+  ad(S, d.b, 0, .55, .5, .22, .22, .26);
+  if (d.beak) { const k = ad(new THREE.ConeGeometry(.06, .14, 6), 0xf97316, 0, .85, -.7); k.rotation.x = -Math.PI / 2; }
+  if (d.shell) ad(S, d.shell, 0, .62, 0, .85, .55, 1.05);
+  if (d.horn) { const k = ad(new THREE.ConeGeometry(.06, .35, 6), 0xfde68a, 0, 1.22, -.5); k.rotation.x = -.5; ad(S, d.mane, 0, .98, -.12, .13, .22, .13); }
+  g.scale.setScalar(d.s); return g;
+}
+function poblarCorral() {
+  PETM = [];
+  corral.forEach(id => {
+    const d = PETS.find(x => x.id === id); if (!d) return;
+    const g = mkPet(d), x = CO.x0 + 1.5 + Math.random() * (CO.x1 - CO.x0 - 3), z = CO.z0 + 1.5 + Math.random() * (CO.z1 - CO.z0 - 3);
+    g.position.set(x, 0, z); W.add(g); PETM.push({ g, x, z, tx: x, tz: z, w: Math.random() * 2, ph: Math.random() * 6, sp: .6 + Math.random() * .4 });
+  });
+}
+function petsStep(dt) {
+  const tmP = performance.now() / 1000;
+  PETM.forEach(m => {
+    if (m.w > 0) { m.w -= dt; return; }
+    const dx = m.tx - m.x, dz = m.tz - m.z, d = Math.hypot(dx, dz);
+    if (d < .15) { m.w = 1 + Math.random() * 3; m.tx = CO.x0 + 1.2 + Math.random() * (CO.x1 - CO.x0 - 2.4); m.tz = CO.z0 + 1.2 + Math.random() * (CO.z1 - CO.z0 - 2.4); m.g.position.y = 0; return; }
+    m.x += dx / d * m.sp * dt; m.z += dz / d * m.sp * dt;
+    m.g.position.set(m.x, Math.abs(Math.sin(tmP * 8 + m.ph)) * .08, m.z); m.g.rotation.y = Math.atan2(-dx, -dz);
+  });
+}
+function petsUI() {
+  st = 'pet';
+  ov('<div class="pn" data-t="pet"><div class="pn-h"><b>🐾 MASCOTAS</b><span class="co">🪙 ' + coins + ' · corral ' + corral.length + '/' + CAP + '</span>' + bt('menu', '✕', 'x') + '</div><div class="pn-g">' + PETS.map(d => {
+    const has = pets.includes(d.id), dentro = corral.includes(d.id);
+    return '<div class="it ' + (dentro ? 'puesto' : '') + '"><i class="em" style="font-size:38px">' + d.e + '</i><span>' + d.n + '</span><small>' + (has ? (dentro ? 'En el corral' : 'En casa') : '🪙 ' + d.pr) + '</small>' + (has ? bt('q:' + d.id, dentro ? 'Sacar' : 'Meter', dentro ? '' : 'ok') : bt('w:' + d.id, 'Comprar', coins < d.pr ? 'no' : '')) + '</div>';
+  }).join('') + '</div></div>');
+}
+function mascota(id, act) {
+  const d = PETS.find(x => x.id === id); if (!d) return;
+  if (act === 'buy') { if (pets.includes(id) || coins < d.pr) return; coins -= d.pr; pets.push(id); if (corral.length < CAP) corral.push(id); sfx('check'); }
+  else { if (corral.includes(id)) corral = corral.filter(x => x !== id); else if (corral.length < CAP) corral.push(id); else toast('El corral está lleno (' + CAP + ')'); sfx('click'); }
+  sv(); petsUI();
+}
 function menu() {
-  st = 'menu'; LB = true; build(world); LB = false;
+  st = 'menu'; LB = true; build(world); LB = false; poblarCorral();
   p = { x: lbpos ? lbpos.x : 0, y: 0, z: lbpos ? Math.max(lbpos.z, -12) : 8, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0, dj: true }; cp = { x: 0, y: 0, z: 0 }; yaw = 0; cy = 0; jx = jz = 0;
   refrescarLobby(); ov(null);
 }
 function lobbyStep(dt) {
+  petsStep(dt);
   let ix = jx + keys.r - keys.l, iz = jz + keys.d - keys.u; const m = Math.hypot(ix, iz); if (m > 1) { ix /= m; iz /= m; }
   const cs = Math.cos(cy), sn = Math.sin(cy), wx = ix * cs + iz * sn, wz = -ix * sn + iz * cs, k = Math.min(1, dt * 10);
   p.vx += (wx * 4.6 - p.vx) * k; p.vz += (wz * 4.6 - p.vz) * k;
@@ -302,7 +375,7 @@ function setFoot(on) {
 $('lobby').addEventListener('pointerdown', e => {
   const el = e.target.closest ? e.target.closest('[data-l]') : null, a = el && el.dataset.l;
   if (!a || st !== 'menu') return; e.preventDefault(); sfx('click');
-  if (a === 'play') start(); else if (a === 'on') onlineUI(); else if (a === 'rk') rangoUI(); else if (a === 'ti') tablaUI();
+  if (a === 'play') start(); else if (a === 'on') onlineUI(); else if (a === 'rk') rangoUI(); else if (a === 'ti') tablaUI(); else if (a === 'pe') petsUI();
 });
 function tienda() {
   st = 'shop';
@@ -553,7 +626,7 @@ function netStep(dt) {
 const RK = [['Bronce', '🥉', 0, 0], ['Plata', '🥈', 80, .06], ['Oro', '🥇', 150, .12], ['Platino', '💠', 250, .18], ['Esmeralda', '💚', 350, .24], ['Diamante', '💎', 500, .3], ['Maestro', '🔮', 700, .36], ['Gran Maestro', '👑', 900, .42], ['Élite', '🔥', 1200, .48], ['Leyenda', '🏆', 1600, .55]];
 const CUM = [0]; for (let i = 0; i < 9; i++) CUM.push(CUM[i] + 40 + i * 10);
 const RKC = ['#cd7f32', '#cbd5e1', '#facc15', '#67e8f9', '#34d399', '#60a5fa', '#c084fc', '#f472b6', '#fb923c', '#f43f5e'];
-const ACC = { menu: '#facc15', shop: '#60a5fa', rew: '#fb923c', clo: '#c084fc', cfg: '#a78bfa', ctl: '#2dd4bf', onl: '#4ade80', rk: '#fbbf24', win: '#4ade80', adm: '#a78bfa' };
+const ACC = { menu: '#facc15', shop: '#60a5fa', rew: '#fb923c', clo: '#c084fc', cfg: '#a78bfa', ctl: '#2dd4bf', onl: '#4ade80', rk: '#fbbf24', win: '#4ade80', adm: '#a78bfa', pet: '#f472b6' };
 const rangoDe = p2 => { let r = 0; while (r < 9 && p2 >= CUM[r + 1]) r++; return r; };
 function cobrarRango() { const r = rangoDe(rp); let g = 0; while (rkc < r) { rkc++; g += RK[rkc][2]; } if (g) { coins += g; sv(); } return g; }
 function rangoUI() {
@@ -637,7 +710,7 @@ function fxStep(dt) {
 }
 function flash(c) { const e = $('fl'); e.style.transition = 'none'; e.style.background = c; e.style.opacity = 1; requestAnimationFrame(() => requestAnimationFrame(() => { e.style.transition = 'opacity .6s'; e.style.opacity = 0; })); }
 function start() {
-  LB = false; build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false; tt = 0; shake = 0; STAT[world] = STAT[world] || { e: 0, c: 0, n: 0, t: 0 }; STAT[world].e++;
+  LB = false; PETM = []; build(world); aplicar(); t = 0; caidas = 0; cy = 0; bst = 0; hcd = 0; pausa = false; tt = 0; shake = 0; STAT[world] = STAT[world] || { e: 0, c: 0, n: 0, t: 0 }; STAT[world].e++;
   p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, on: P[0], coy: 0, yaw: 0, dj: true };
   cp = { x: 0, y: 0, z: 0 }; cam.position.set(0, 6, 10); st = 'play'; ov(null);
 }
@@ -658,7 +731,7 @@ $('ov').addEventListener('pointerdown', e => {
   const a = e.target.dataset && e.target.dataset.a;
   if (!a || performance.now() - tc < 300) return; sfx('click');
   if (a === 'play') { if (st === 'final') { world = 1; sv(); } start(); }
-  else if (a === 'shop') tienda(); else if (a === 'menu') { if (pausa) { pausa = false; jx = jz = 0; st = 'play'; ov(null); } else menu(); } else if (a === 'cfg') config(); else if (a.startsWith('s:')) sndAct(a.slice(2)); else if (a === 'rk') rangoUI(); else if (a === 'ctl') controlesUI(); else if (a.startsWith('o:')) ctlAct(a.slice(2)); else if (a === 'on') onlineUI(); else if (a.startsWith('n:')) netAct(a.slice(2)); else if (a.startsWith('c:')) ropaUI(a.slice(2)); else if (a.startsWith('p:')) ponerRopa(a.slice(2)); else if (a.startsWith('k:')) comprarRopa(a.slice(2)); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
+  else if (a === 'shop') tienda(); else if (a === 'menu') { if (pausa) { pausa = false; jx = jz = 0; st = 'play'; ov(null); } else menu(); } else if (a === 'cfg') config(); else if (a.startsWith('q:')) mascota(a.slice(2), 'toggle'); else if (a.startsWith('w:')) mascota(a.slice(2), 'buy'); else if (a.startsWith('s:')) sndAct(a.slice(2)); else if (a === 'rk') rangoUI(); else if (a === 'ctl') controlesUI(); else if (a.startsWith('o:')) ctlAct(a.slice(2)); else if (a === 'on') onlineUI(); else if (a.startsWith('n:')) netAct(a.slice(2)); else if (a.startsWith('c:')) ropaUI(a.slice(2)); else if (a.startsWith('p:')) ponerRopa(a.slice(2)); else if (a.startsWith('k:')) comprarRopa(a.slice(2)); else if (a === 'adm') entrar(); else if (a[0] === 'g') cambiarG(+a.slice(2)); else if (a.startsWith('a:')) accion(a.slice(2));
   else if (a[0] === 'r') reclamar(a.slice(2)); else if (a[0] === 'b') comprar(a.slice(2)); else if (a[0] === 'e') equipar(a.slice(2));
 });
 
